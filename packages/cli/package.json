@@ -40,7 +40,7 @@
     "start": "node ./dist/index.mjs"
   },
   "dependencies": {
-    "@beet-bot/discord": "*",
+    "@beet-bot/discord": "0.0.0",
     "dotenv": "^16.0.1",
     "mri": "^1.2.0"
   },

@@ -10,7 +10,7 @@ plugins:
         echo "//registry.npmjs.org/:_authToken = $NPM_TOKEN" > .npmrc
         && npm whoami --userconfig .npmrc
       prepareCmd: >
-        find packages -name package.json -execdir npm version ${nextRelease.version} --no-git-tag-version --allow-same-version \;
+        sed -E 's!("@beet-bot/.+"|"version"): ".+"!\1: "${nextRelease.version}"!' --in-place packages/*/package.json
         && find packages -name package.json -execdir npm pack \;
       publishCmd: >
         find packages -name package.json -execdir npm publish --userconfig .npmrc \;
