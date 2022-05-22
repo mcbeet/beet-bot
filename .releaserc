@@ -13,6 +13,6 @@ plugins:
         sed -E 's!("@beet-bot/.+"|"version"): ".+"!\1: "${nextRelease.version}"!' --in-place packages/*/package.json
         && find packages -name package.json -execdir npm pack \;
       publishCmd: >
-        find packages -name package.json -execdir npm publish --userconfig .npmrc \;
+        find packages -name package.json -execdir npm publish --userconfig ../../.npmrc --access public \;
   - "@semantic-release/git"
   - "@semantic-release/github"
