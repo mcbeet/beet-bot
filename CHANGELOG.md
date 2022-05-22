@@ -1,3 +1,10 @@
+## [0.0.5](https://github.com/mcbeet/beet-bot/compare/v0.0.4...v0.0.5) (2022-05-22)
+
+
+### Bug Fixes
+
+* proper name for bin option ([5c95f17](https://github.com/mcbeet/beet-bot/commit/5c95f17097eb7009aad4768c88aa1a2b08e9de31))
+
 ## [0.0.4](https://github.com/mcbeet/beet-bot/compare/v0.0.3...v0.0.4) (2022-05-22)
 
 
