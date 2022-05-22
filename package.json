@@ -1,12 +1,12 @@
 {
-  "name": "beet-bot",
+  "name": "beet-bot-monorepo",
   "private": true,
   "scripts": {
     "stub": "pnpm run -r stub",
-    "dev": "pnpm run --filter=cli dev",
+    "dev": "pnpm run --filter=beet-bot dev",
     "lint": "pnpm run -r lint",
     "build": "pnpm run -r build",
-    "start": "pnpm run --filter=cli start",
+    "start": "pnpm run --filter=beet-bot start",
     "release": "semantic-release",
     "release-dry": "semantic-release --dry-run"
   },

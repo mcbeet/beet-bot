@@ -4,7 +4,25 @@
 [![npm](https://img.shields.io/npm/v/extract-math.svg)](https://www.npmjs.com/package/extract-math)
 [![Discord](https://img.shields.io/discord/900530660677156924?color=7289DA&label=discord&logo=discord&logoColor=fff)](https://discord.gg/98MdSGMm8j)
 
-> Packages for the discord bot and running beet builds.
+> Packages for the beet bot.
+
+## Installation
+
+You can install the beet bot via `npm`.
+
+```bash
+$ npm install beet-bot
+```
+
+To run your own instance of the bot use the `beet-bot` command or simply run it with `npx` to install it automatically.
+
+```bash
+$ npx beet-bot --clientId=... --token=...
+```
+
+## Usage
+
+You can provide credentials through command-line options `--clientId/--token` or by using environment variables `BEET_BOT_CLIENT_ID/BEET_BOT_TOKEN`. The bot will load the `.env` file in the working directory.
 
 ## Contributing
 
@@ -28,6 +46,11 @@ BEET_BOT_TOKEN=...
 ```
 
 To build for production use the `pnpm build` command. Note that this overwrites package stubs so you will need to run `pnpm stub` again if you want to resume developing locally.
+
+```bash
+$ pnpm build
+$ pnpm start --clientId=... --token=...
+```
 
 ---
 
