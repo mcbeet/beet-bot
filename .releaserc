@@ -1,0 +1,18 @@
+branches:
+  - main
+
+plugins:
+  - "@semantic-release/commit-analyzer"
+  - "@semantic-release/release-notes-generator"
+  - "@semantic-release/changelog"
+  - - "@semantic-release/exec"
+    - verifyConditionsCmd: >
+        echo "//registry.npmjs.org/:_authToken = $NPM_TOKEN" > .npmrc
+        && npm whoami --userconfig .npmrc
+      prepareCmd: >
+        find packages -name package.json -execdir npm version ${nextRelease.version} --no-git-tag-version --allow-same-version \;
+        && find packages -name package.json -execdir npm pack \;
+      publishCmd: >
+        find packages -name package.json -execdir npm publish --userconfig .npmrc \;
+  - "@semantic-release/git"
+  - "@semantic-release/github"

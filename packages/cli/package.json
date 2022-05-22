@@ -1,0 +1,51 @@
+{
+  "name": "@beet-bot/cli",
+  "version": "0.0.0",
+  "description": "Cli for the beet bot",
+  "author": "Valentin Berlier <berlier.v@gmail.com>",
+  "homepage": "https://github.com/mcbeet/beet-bot/packages/cli",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mcbeet/beet-bot.git",
+    "directory": "packages/cli"
+  },
+  "bugs": {
+    "url": "https://github.com/mcbeet/beet-bot/issues"
+  },
+  "keywords": [
+    "beet",
+    "docker",
+    "minecraft",
+    "minecraft-commands",
+    "discord-bot"
+  ],
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "bin": "./dist/index.mjs",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "jiti ./src/index.ts",
+    "lint": "eslint --ignore-path ../../.eslintignore --ext .ts .",
+    "build": "unbuild",
+    "start": "node ./dist/index.mjs"
+  },
+  "dependencies": {
+    "@beet-bot/discord": "*",
+    "dotenv": "^16.0.1",
+    "mri": "^1.2.0"
+  },
+  "devDependencies": {
+    "jiti": "^1.13.0",
+    "unbuild": "^0.7.4"
+  }
+}
