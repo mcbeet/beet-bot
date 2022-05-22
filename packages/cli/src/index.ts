@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import mri from 'mri'
 import { config } from 'dotenv'
 import { runBeetBot } from '@beet-bot/discord'
