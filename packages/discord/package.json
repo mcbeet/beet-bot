@@ -1,9 +1,10 @@
 {
   "name": "@beet-bot/discord",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "The beet discord bot",
   "author": "Valentin Berlier <berlier.v@gmail.com>",
   "homepage": "https://github.com/mcbeet/discord/packages/discord",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/mcbeet/discord.git",
@@ -41,7 +42,7 @@
   "dependencies": {
     "@discordjs/builders": "^0.13.0",
     "@discordjs/rest": "^0.4.1",
-    "@beet-bot/runner": "0.0.0",
+    "@beet-bot/runner": "0.0.1",
     "discord-api-types": "^0.33.0",
     "discord.js": "^13.7.0"
   },
