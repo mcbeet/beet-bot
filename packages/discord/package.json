@@ -1,17 +1,17 @@
 {
   "name": "@beet-bot/discord",
-  "version": "0.0.3",
+  "version": "0.0.1",
   "description": "The beet discord bot",
   "author": "Valentin Berlier <berlier.v@gmail.com>",
   "license": "MIT",
-  "homepage": "https://github.com/mcbeet/discord/packages/discord",
+  "homepage": "https://github.com/mcbeet/beet-bot/tree/main/packages/discord",
   "repository": {
     "type": "git",
-    "url": "https://github.com/mcbeet/discord.git",
+    "url": "https://github.com/mcbeet/beet-bot.git",
     "directory": "packages/discord"
   },
   "bugs": {
-    "url": "https://github.com/mcbeet/discord/issues"
+    "url": "https://github.com/mcbeet/beet-bot/issues"
   },
   "keywords": [
     "beet",

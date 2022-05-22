@@ -4,7 +4,7 @@
   "description": "Run beet builds from nodejs",
   "author": "Valentin Berlier <berlier.v@gmail.com>",
   "license": "MIT",
-  "homepage": "https://github.com/mcbeet/beet-bot/packages/runner",
+  "homepage": "https://github.com/mcbeet/beet-bot/tree/main/packages/runner",
   "repository": {
     "type": "git",
     "url": "https://github.com/mcbeet/beet-bot.git",
