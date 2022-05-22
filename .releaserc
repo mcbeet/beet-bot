@@ -5,14 +5,22 @@ plugins:
   - "@semantic-release/commit-analyzer"
   - "@semantic-release/release-notes-generator"
   - "@semantic-release/changelog"
+
+  # Custom commands for updating package versions and publishing
   - - "@semantic-release/exec"
     - verifyConditionsCmd: >
         echo "//registry.npmjs.org/:_authToken = $NPM_TOKEN" > .npmrc
         && npm whoami --userconfig .npmrc
       prepareCmd: >
         sed -E 's!("@beet-bot/.+"|"version"): ".+"!\1: "${nextRelease.version}"!' --in-place packages/*/package.json
-        && find packages -name package.json -execdir npm pack \;
+        && pnpm install
       publishCmd: >
         find packages -name package.json -execdir npm publish --userconfig ../../.npmrc --access public \;
-  - "@semantic-release/git"
-  - "@semantic-release/github"
+
+  # Commit updated package.json and lockfile
+  - - "@semantic-release/git"
+    - assets: ["packages/*/package.json", "pnpm-lock.yaml"]
+
+  # Include package tarballs
+  - - "@semantic-release/github"
+    - assets: "packages/*/*.tgz"
