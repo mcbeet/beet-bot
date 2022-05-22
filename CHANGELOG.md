@@ -1,3 +1,10 @@
+## [0.0.7](https://github.com/mcbeet/beet-bot/compare/v0.0.6...v0.0.7) (2022-05-22)
+
+
+### Bug Fixes
+
+* rename package ([d918e8e](https://github.com/mcbeet/beet-bot/commit/d918e8e0cfde5e7e7e7082304565a2a8a1283504))
+
 ## [0.0.6](https://github.com/mcbeet/beet-bot/compare/v0.0.5...v0.0.6) (2022-05-22)
 
 
