@@ -1,3 +1,10 @@
+## [0.0.6](https://github.com/mcbeet/beet-bot/compare/v0.0.5...v0.0.6) (2022-05-22)
+
+
+### Bug Fixes
+
+* cli shebang ([01245f1](https://github.com/mcbeet/beet-bot/commit/01245f190575ffbcf902dfb2433d0fc66d46c6a9))
+
 ## [0.0.5](https://github.com/mcbeet/beet-bot/compare/v0.0.4...v0.0.5) (2022-05-22)
 
 
