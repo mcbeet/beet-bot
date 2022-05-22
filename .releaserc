@@ -14,12 +14,13 @@ plugins:
       prepareCmd: >
         sed -E 's!("@beet-bot/.+"|"version"): ".+"!\1: "${nextRelease.version}"!' --in-place packages/*/package.json
         && pnpm install --no-frozen-lockfile
+        && find packages -name package.json -execdir npm pack \;
       publishCmd: >
         find packages -name package.json -execdir npm publish --userconfig ../../.npmrc --access public \;
 
-  # Commit updated package.json and lockfile
+  # Commit updated changelog, package.json and lockfile
   - - "@semantic-release/git"
-    - assets: ["packages/*/package.json", "pnpm-lock.yaml"]
+    - assets: ["CHANGELOG.md", "packages/*/package.json", "pnpm-lock.yaml"]
 
   # Include package tarballs
   - - "@semantic-release/github"
