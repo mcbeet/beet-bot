@@ -22,8 +22,6 @@ jobs:
         with:
           node-version: 16
           cache: pnpm
-      - name: Install pnpm
-        run: npm install pnpm@latest -g
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
       - name: Build packages

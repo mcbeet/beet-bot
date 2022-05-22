@@ -13,7 +13,7 @@ plugins:
         && npm whoami --userconfig .npmrc
       prepareCmd: >
         sed -E 's!("@beet-bot/.+"|"version"): ".+"!\1: "${nextRelease.version}"!' --in-place packages/*/package.json
-        && pnpm install
+        && pnpm install --no-frozen-lockfile
       publishCmd: >
         find packages -name package.json -execdir npm publish --userconfig ../../.npmrc --access public \;
 
