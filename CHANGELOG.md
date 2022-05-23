@@ -1,3 +1,10 @@
+## [0.0.8](https://github.com/mcbeet/beet-bot/compare/v0.0.7...v0.0.8) (2022-05-23)
+
+
+### Bug Fixes
+
+* sync descriptions ([9e0aebf](https://github.com/mcbeet/beet-bot/commit/9e0aebf02a329fe602cbd66bd17d74f68fbf42b3))
+
 ## [0.0.7](https://github.com/mcbeet/beet-bot/compare/v0.0.6...v0.0.7) (2022-05-22)
 
 
