@@ -1,3 +1,10 @@
+## [0.0.9](https://github.com/mcbeet/beet-bot/compare/v0.0.8...v0.0.9) (2022-05-23)
+
+
+### Bug Fixes
+
+* forgot to update title ([54d5293](https://github.com/mcbeet/beet-bot/commit/54d5293fde123c2f5c9625468a8ce9e6457ac0db))
+
 ## [0.0.8](https://github.com/mcbeet/beet-bot/compare/v0.0.7...v0.0.8) (2022-05-23)
 
 
