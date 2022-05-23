@@ -1,4 +1,4 @@
-# @beet-bot/cli
+# beet-bot
 
 > The beet bot.
 
