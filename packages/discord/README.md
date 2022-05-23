@@ -1,6 +1,8 @@
 # @beet-bot/discord
 
-> The beet discord bot.
+> Core implementation of the discord bot for the beet server.
+
+Check out the [repository](https://github.com/mcbeet/beet-bot) for docs.
 
 ---
 

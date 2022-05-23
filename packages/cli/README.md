@@ -1,6 +1,8 @@
 # @beet-bot/cli
 
-> Cli for the beet bot.
+> The beet bot.
+
+Check out the [repository](https://github.com/mcbeet/beet-bot) for docs.
 
 ---
 
