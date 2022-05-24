@@ -1,3 +1,12 @@
+# [0.1.0](https://github.com/mcbeet/beet-bot/compare/v0.0.9...v0.1.0) (2022-05-24)
+
+
+### Features
+
+* add runner default ([36dca18](https://github.com/mcbeet/beet-bot/commit/36dca188197f414340d7e31b6552de93df787da6))
+* early complete ([65148f7](https://github.com/mcbeet/beet-bot/commit/65148f7c36e461768a6655bcd849e39c480bbaec))
+* runner implementation ([f637957](https://github.com/mcbeet/beet-bot/commit/f6379577454e702a9b8aa5cf262d31e020fcbc9e))
+
 ## [0.0.9](https://github.com/mcbeet/beet-bot/compare/v0.0.8...v0.0.9) (2022-05-23)
 
 
