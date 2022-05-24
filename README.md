@@ -22,7 +22,13 @@ $ npx beet-bot --clientId=... --token=...
 
 ## Usage
 
-You can provide credentials through command-line options `--clientId/--token` or by using environment variables `BEET_BOT_CLIENT_ID/BEET_BOT_TOKEN`. The bot will load the `.env` file in the working directory.
+You can provide credentials through command-line options `--clientId/--token` or by using environment variables `BEET_BOT_CLIENT_ID/BEET_BOT_TOKEN`. The bot will load the `.env` file in the working directory. The `--config` option lets you specify a json file in which you can define runner environments.
+
+```bash
+$ beet-bot --config runner.json
+```
+
+> Check out the sample [runner.json](runner.json).
 
 ## Contributing
 
@@ -32,24 +38,30 @@ This is a monorepo managed with [`pnpm`](https://pnpm.io/). If you don't have it
 $ pnpm install
 ```
 
-Set up packages for local development by running `pnpm stub`, and then launch the bot with the required credentials.
+Set up packages for local development by running `pnpm -r stub`, and then launch the bot with the required credentials.
 
 ```bash
 $ pnpm dev --clientId=... --token=...
 ```
 
-You can also create a `.env` file in the `packages/beet-bot` folder.
+You can also create a `.env` file at the root of the repository.
 
 ```env
 BEET_BOT_CLIENT_ID=...
 BEET_BOT_TOKEN=...
 ```
 
-To build for production use the `pnpm build` command. Note that this overwrites package stubs so you will need to run `pnpm stub` again if you want to resume developing locally.
+To build for production use the `pnpm -r build` command. Note that this overwrites package stubs so you will need to run `pnpm -r stub` again if you want to resume developing locally.
 
 ```bash
-$ pnpm build
+$ pnpm -r build
 $ pnpm start --clientId=... --token=...
+```
+
+The project must type-check and `eslint` shouldn't report any error.
+
+```bash
+$ pnpm -r lint
 ```
 
 ---

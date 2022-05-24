@@ -1,0 +1,9 @@
+{
+  "environments": {
+    "default": {
+      "warmup": 4,
+      "timeout": 3000,
+      "path": "docker/runner-default"
+    }
+  }
+}

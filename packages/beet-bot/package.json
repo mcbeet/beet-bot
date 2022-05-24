@@ -35,18 +35,17 @@
     "dist"
   ],
   "scripts": {
-    "dev": "jiti ./src/index.ts",
+    "stub": "unbuild --stub",
     "lint": "eslint --ignore-path ../../.eslintignore --ext .ts .",
-    "build": "unbuild",
-    "start": "node ./dist/index.mjs"
+    "build": "unbuild"
   },
   "dependencies": {
     "@beet-bot/discord": "0.0.9",
+    "@beet-bot/runner": "0.0.9",
     "dotenv": "^16.0.1",
     "mri": "^1.2.0"
   },
   "devDependencies": {
-    "jiti": "^1.13.0",
     "unbuild": "^0.7.4"
   }
 }

@@ -3,11 +3,8 @@
   "private": true,
   "packageManager": "pnpm@7.0.0",
   "scripts": {
-    "stub": "pnpm run -r stub",
-    "dev": "pnpm run --filter=beet-bot dev",
-    "lint": "pnpm run -r lint",
-    "build": "pnpm run -r build",
-    "start": "pnpm run --filter=beet-bot start",
+    "dev": "jiti packages/beet-bot/src/index.ts",
+    "start": "node packages/beet-bot/dist/index.mjs",
     "release": "semantic-release",
     "release-dry": "semantic-release --dry-run"
   },
@@ -16,7 +13,9 @@
     "@semantic-release/changelog": "^6.0.1",
     "@semantic-release/exec": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
+    "@types/node": "^17.0.35",
     "eslint": "^8.16.0",
+    "jiti": "^1.13.0",
     "semantic-release": "^19.0.2",
     "typescript": "^4.6.4"
   }

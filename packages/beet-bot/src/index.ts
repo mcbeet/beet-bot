@@ -1,15 +1,18 @@
 #!/usr/bin/env node
+import * as fs from 'fs/promises'
 import mri from 'mri'
-import { config } from 'dotenv'
+import * as dotenv from 'dotenv'
 import { runBeetBot } from '@beet-bot/discord'
+import { createPoolRunner } from '@beet-bot/runner'
 
-const main = () => {
-  config()
-  const { clientId, token } = mri(process.argv.slice(2), {
-    string: ['clientId', 'token'],
+const main = async () => {
+  dotenv.config()
+  const { clientId, token, config } = mri(process.argv.slice(2), {
+    string: ['clientId', 'token', 'config'],
     default: {
       clientId: process.env.BEET_BOT_CLIENT_ID,
-      token: process.env.BEET_BOT_TOKEN
+      token: process.env.BEET_BOT_TOKEN,
+      config: process.env.BEET_BOT_CONFIG
     }
   })
 
@@ -20,7 +23,25 @@ const main = () => {
     process.exit(1)
   }
 
-  runBeetBot({ clientId, token })
+  let environments
+
+  if (config) {
+    try {
+      const data = JSON.parse(await fs.readFile(config, { encoding: 'utf-8' }))
+      environments = data.environments
+    } catch {
+      console.log(`ERROR: Couldn't load runner config at "${config}"`)
+      process.exit(1)
+    }
+  }
+
+  console.log(`INFO: Starting bot with ${Object.keys(environments ?? {}).length} environment(s)`)
+
+  runBeetBot({
+    clientId,
+    token,
+    runner: createPoolRunner(environments)
+  })
 }
 
 main()
