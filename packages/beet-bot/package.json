@@ -30,9 +30,7 @@
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
-  "bin": {
-    "beet-bot": "./dist/index.mjs"
-  },
+  "bin": "./dist/index.mjs",
   "files": [
     "dist"
   ],
