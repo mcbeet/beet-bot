@@ -38,7 +38,7 @@ Set up packages for local development by running `pnpm stub`, and then launch th
 $ pnpm dev --clientId=... --token=...
 ```
 
-You can also create a `.env` file in the `./packages/cli` folder.
+You can also create a `.env` file in the `packages/beet-bot` folder.
 
 ```env
 BEET_BOT_CLIENT_ID=...

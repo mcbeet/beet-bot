@@ -20,7 +20,7 @@ importers:
       semantic-release: 19.0.2
       typescript: 4.6.4
 
-  packages/cli:
+  packages/beet-bot:
     specifiers:
       '@beet-bot/discord': 0.0.9
       dotenv: ^16.0.1
