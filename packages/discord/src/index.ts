@@ -7,6 +7,7 @@ export type BeetBotOptions = {
 }
 
 export const runBeetBot = async ({ runner }: BeetBotOptions) => {
+  await new Promise(resolve => setTimeout(resolve, 4000))
   console.log(await runner('default', {
     require: ['bolt'],
     pipeline: ['lectern.contrib.messaging', 'mecha'],

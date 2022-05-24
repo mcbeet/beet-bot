@@ -47,11 +47,6 @@ export const createBuilder = ({ warmup, timeout, setup }: BuilderOptions) => {
         throw new Error(`Worker #${handle.pid} does't have stdio`)
       }
 
-      let output = ''
-      handle.stdout.on('data', (chunk) => {
-        output += chunk
-      })
-
       let expired = false
       const tid = setTimeout(() => {
         console.log(`WARN: No response from worker #${handle.pid}`)
@@ -59,17 +54,42 @@ export const createBuilder = ({ warmup, timeout, setup }: BuilderOptions) => {
         stop()
       }, timeout)
 
+      let doneEarly = false
+      const start = process.hrtime()
+
+      let output = ''
+      handle.stdout.on('data', (chunk) => {
+        if (expired || doneEarly) {
+          return
+        }
+
+        output += chunk
+
+        try {
+          const result = JSON.parse(output)
+
+          const stop = process.hrtime(start)
+          console.log(`INFO: Build complete #${handle.pid} (took ${Math.round((stop[0] * 1e9 + stop[1]) / 1e6) / 1000}s)`)
+
+          clearTimeout(tid)
+          doneEarly = true
+          resolve(result)
+        } catch { }
+      })
+
       handle.stdin.on('error', () => {
         console.log(`WARN: Failed to communicate with worker #${handle.pid}`)
       })
 
-      const start = process.hrtime()
       console.log(`INFO: Start build #${handle.pid}`)
       handle.stdin.end(JSON.stringify(options))
 
       handle.on('close', (code, signal) => {
-        const stop = process.hrtime(start)
-        console.log(`INFO: Build complete #${handle.pid} (took ${Math.round((stop[0] * 1e9 + stop[1]) / 1e6) / 1000}s)`)
+        if (doneEarly) {
+          return
+        } else {
+          console.log(`INFO: Finalize build #${handle.pid}`)
+        }
 
         if (expired) {
           reject(new Error(`Build #${handle.pid} timed out after ${timeout}ms`))
