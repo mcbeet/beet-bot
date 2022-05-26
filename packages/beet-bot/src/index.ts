@@ -3,7 +3,6 @@ import * as fs from 'fs/promises'
 import mri from 'mri'
 import * as dotenv from 'dotenv'
 import { runBeetBot } from '@beet-bot/discord'
-import { createPoolRunner } from '@beet-bot/runner'
 
 const main = async () => {
   dotenv.config()
@@ -23,24 +22,33 @@ const main = async () => {
     process.exit(1)
   }
 
-  let environments
+  let database = {}
+  let environments = {}
 
   if (config) {
     try {
       const data = JSON.parse(await fs.readFile(config, { encoding: 'utf-8' }))
-      environments = data.environments
+
+      if (typeof data.database === 'object') {
+        database = data.database
+      }
+
+      if (typeof data.environments === 'object') {
+        environments = data.environments
+      }
     } catch {
       console.log(`ERROR: Couldn't load runner config at "${config}"`)
       process.exit(1)
     }
   }
 
-  console.log(`INFO: Starting bot with ${Object.keys(environments ?? {}).length} environment(s)`)
+  console.log(`INFO: Starting bot with ${Object.keys(environments).length} environment(s)`)
 
   runBeetBot({
     clientId,
     token,
-    runner: createPoolRunner(environments)
+    database,
+    environments
   })
 }
 

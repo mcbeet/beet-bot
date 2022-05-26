@@ -135,3 +135,6 @@ node_modules
 dist
 .env
 *.tgz
+
+# Database
+db.json

@@ -25,10 +25,10 @@ $ npx beet-bot --clientId=... --token=...
 You can provide credentials through command-line options `--clientId/--token` or by using environment variables `BEET_BOT_CLIENT_ID/BEET_BOT_TOKEN`. The bot will load the `.env` file in the working directory. The `--config` option lets you specify a json file in which you can define runner environments.
 
 ```bash
-$ beet-bot --config runner.json
+$ beet-bot --config bot.json
 ```
 
-> Check out the sample [runner.json](runner.json).
+> Check out the sample [bot.json](bot.json).
 
 ## Contributing
 

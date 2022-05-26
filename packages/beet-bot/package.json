@@ -41,7 +41,6 @@
   },
   "dependencies": {
     "@beet-bot/discord": "0.1.0",
-    "@beet-bot/runner": "0.1.0",
     "dotenv": "^16.0.1",
     "mri": "^1.2.0"
   },
