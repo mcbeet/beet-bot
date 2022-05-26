@@ -1,3 +1,10 @@
+# [0.2.0](https://github.com/mcbeet/beet-bot/compare/v0.1.0...v0.2.0) (2022-05-26)
+
+
+### Features
+
+* bot interactions ([b9a69e5](https://github.com/mcbeet/beet-bot/commit/b9a69e5858ef6786ea9126c66f7c8e063102813b))
+
 # [0.1.0](https://github.com/mcbeet/beet-bot/compare/v0.0.9...v0.1.0) (2022-05-24)
 
 
