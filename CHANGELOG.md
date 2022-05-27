@@ -1,3 +1,10 @@
+## [0.3.1](https://github.com/mcbeet/beet-bot/compare/v0.3.0...v0.3.1) (2022-05-27)
+
+
+### Bug Fixes
+
+* minor tweaks ([38caa0d](https://github.com/mcbeet/beet-bot/commit/38caa0de0b12c3ac4860edabbdd02f1fdc4bf184))
+
 # [0.3.0](https://github.com/mcbeet/beet-bot/compare/v0.2.0...v0.3.0) (2022-05-27)
 
 
