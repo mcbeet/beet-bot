@@ -1,6 +1,6 @@
 [[package]]
 name = "beet"
-version = "0.66.0"
+version = "0.67.0"
 description = "The Minecraft pack development kit"
 category = "main"
 optional = false
@@ -22,15 +22,15 @@ image = ["pillow"]
 
 [[package]]
 name = "bolt"
-version = "0.5.1"
+version = "0.6.0"
 description = "Supercharge Minecraft commands with Python"
 category = "main"
 optional = false
 python-versions = ">=3.8,<4.0"
 
 [package.dependencies]
-beet = ">=0.64.0"
-mecha = ">=0.49.1"
+beet = ">=0.67.0"
+mecha = ">=0.52.2"
 
 [[package]]
 name = "click"
@@ -131,14 +131,14 @@ python-versions = ">=3.7"
 
 [[package]]
 name = "mecha"
-version = "0.51.0"
+version = "0.52.2"
 description = "A powerful Minecraft command library"
 category = "main"
 optional = false
 python-versions = ">=3.8,<4.0"
 
 [package.dependencies]
-beet = ">=0.66.0"
+beet = ">=0.67.0"
 tokenstream = "1.4.1"
 
 [[package]]
@@ -230,16 +230,16 @@ python-versions = ">=3.7"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "2dee12d10c964ab61b64b64734eba81bf36794f6db036664f09cbf2d501b7ad2"
+content-hash = "8b2c4c148e8b3c6af1336e893004d82354ac047b579d1f64687f8e1eb2a7d754"
 
 [metadata.files]
 beet = [
-    {file = "beet-0.66.0-py3-none-any.whl", hash = "sha256:1fe14b20b46901ef9dc16d59bee86dc7b5d93d16777e7f84b422cff1faa26b1a"},
-    {file = "beet-0.66.0.tar.gz", hash = "sha256:f8d9690a91b1382d87a4435531221322a1f1aab5e6f2376f61b70fe84fa5de12"},
+    {file = "beet-0.67.0-py3-none-any.whl", hash = "sha256:4e44e7278be50ebd8dec697e411ccdc377a24308e21cdb197f071dfbe1e1cde7"},
+    {file = "beet-0.67.0.tar.gz", hash = "sha256:f6796b7a8e8241aabbbf5b7e15403e87645055b4ec952bb9cfc0a5c0ba52d48d"},
 ]
 bolt = [
-    {file = "bolt-0.5.1-py3-none-any.whl", hash = "sha256:e4c35d34885bc03912ed48c3638bbaca8dcbde0bcff55d6b11f8fe743bf50ddc"},
-    {file = "bolt-0.5.1.tar.gz", hash = "sha256:4428227bf7316d5d51007d0565aba438734ebec5e0b20578b43bd18b51c01805"},
+    {file = "bolt-0.6.0-py3-none-any.whl", hash = "sha256:d4f5dc1d4578b490652d9cccd4a321966c2775d44d9584dcdbb62f4de4379f3f"},
+    {file = "bolt-0.6.0.tar.gz", hash = "sha256:15a1d6ef3357e66030c0e7957926829dd221465ea8c7ebe090b41f5e64576b24"},
 ]
 click = [
     {file = "click-8.1.3-py3-none-any.whl", hash = "sha256:bb4d8133cb15a609f44e8213d9b391b0809795062913b383c62be0ee95b1db48"},
@@ -312,8 +312,8 @@ mdurl = [
     {file = "mdurl-0.1.1.tar.gz", hash = "sha256:f79c9709944df218a4cdb0fcc0b0c7ead2f44594e3e84dc566606f04ad749c20"},
 ]
 mecha = [
-    {file = "mecha-0.51.0-py3-none-any.whl", hash = "sha256:7d7721b0a363103cd7b44c9a662d076bb66b8aa0db31269cbf909a4a8d710a6e"},
-    {file = "mecha-0.51.0.tar.gz", hash = "sha256:49dcff842a7fc0b2c5e0e079ae6d21a1aeea50f26d7e5ec701bef60745c20bc0"},
+    {file = "mecha-0.52.2-py3-none-any.whl", hash = "sha256:69a49ec9273699d340eb4d8e63395f885437753b3503bec0eba5312f7303c52b"},
+    {file = "mecha-0.52.2.tar.gz", hash = "sha256:c16cb38435710d249ec9dd1b277e875c446d39b6b48a2e7cf4390e821449392e"},
 ]
 nbtlib = [
     {file = "nbtlib-1.12.1-py3-none-any.whl", hash = "sha256:55e6811aa4e4bfe9000cbe026f1fe540ebc231c8a3f3558d7819c6c7274001c6"},
