@@ -5,7 +5,7 @@ import { PoolRunner } from '@beet-bot/runner'
 import { Database } from './database'
 import { generateGuildCommands } from './commands'
 import { ConfigDashboardOptions, createConfigDashboard, createEditConfigModal } from './widgets'
-import { createReport } from './report'
+import { BuildInfo, createReport } from './report'
 
 export type BeetBotContext = {
   clientId: string
@@ -156,37 +156,41 @@ export const handleInteractions = ({ clientId, discordClient, discordApi, db, en
         let newConfigData = interaction.fields.getTextInputValue('editConfig.configData')
 
         if (!newConfigId.match(/^[a-zA-Z0-9_]{3,20}$/)) {
-          return updateDashboard({
+          await updateDashboard({
             guildInfo,
             selected: configId,
             error: `Invalid configuration id \`${newConfigId}\``
           })
+          return
         }
 
         if (!environments.includes(newConfigRunner)) {
-          return updateDashboard({
+          await updateDashboard({
             guildInfo,
             selected: configId,
             error: `Invalid runner \`${newConfigRunner}\``
           })
+          return
         }
 
         try {
           newConfigData = JSON.parse(newConfigData)
         } catch {
-          return updateDashboard({
+          await updateDashboard({
             guildInfo,
             selected: configId,
             error: "Couldn't parse json configuration\n```\n" + newConfigData + '\n```'
           })
+          return
         }
 
         if (typeof newConfigData !== 'object') {
-          return updateDashboard({
+          await updateDashboard({
             guildInfo,
             selected: configId,
             error: 'Configuration must be a json object\n```\n' + JSON.stringify(newConfigData, undefined, 2) + '\n```'
           })
+          return
         }
 
         delete guildInfo.configurations[configId]
@@ -231,15 +235,36 @@ export const handleInteractions = ({ clientId, discordClient, discordApi, db, en
 
         data.meta.messaging.input = interaction.targetMessage.content
 
+        let deferred = false
+        const tid = setTimeout(() => {
+          deferred = true
+          interaction.deferReply()
+        }, 800)
+
+        const showReport = async (info: BuildInfo) => {
+          if (deferred) {
+            await interaction.editReply(createReport(info))
+          } else {
+            clearTimeout(tid)
+            await interaction.reply(createReport(info))
+          }
+        }
+
         let result
 
         try {
           result = await runner(name, data)
         } catch (err) {
-          return interaction.reply(`Environment failure: ${err}`)
+          await showReport({
+            status: 'error',
+            error: {
+              message: `${err}`
+            }
+          })
+          return
         }
 
-        await interaction.reply(createReport(result))
+        await showReport(result)
       }
     }
   })

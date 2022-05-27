@@ -99,6 +99,10 @@ export const createReport = ({ error, stdout, data_pack, resource_pack }: BuildI
     }
   }
 
+  if (content === dataPackSections[0] || content === resourcePackSections[0]) {
+    content = content.slice(content.indexOf('\n') + 1)
+  }
+
   const files = []
 
   for (const [path, data] of [...dataPackImages, ...resourcePackImages]) {
@@ -122,7 +126,7 @@ export const createReport = ({ error, stdout, data_pack, resource_pack }: BuildI
   }
 
   if (!content && files.length === 0) {
-    content = 'No output'
+    content = '```\nNo output\n```'
   }
 
   return { content: content || undefined, files }

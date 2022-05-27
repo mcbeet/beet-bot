@@ -92,7 +92,8 @@ export const createBuilder = ({ warmup, timeout, setup }: BuilderOptions) => {
         }
 
         if (expired) {
-          reject(new Error(`Build #${handle.pid} timed out after ${timeout}ms`))
+          const stop = process.hrtime(start)
+          reject(new Error(`Build #${handle.pid} timed out after ${Math.round((stop[0] * 1e9 + stop[1]) / 1e6) / 1000}s`))
         } else {
           clearTimeout(tid)
           if (signal) {
