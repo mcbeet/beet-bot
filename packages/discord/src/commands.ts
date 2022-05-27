@@ -8,7 +8,7 @@ export const BUILTIN_COMMANDS = [
     .setDescription('Manage beet bot configuration')
     .addStringOption(option =>
       option
-        .setName('id')
+        .setName('config')
         .setDescription('The id of the configuration')
     )
 ]

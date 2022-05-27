@@ -7,7 +7,8 @@
     "default": {
       "warmup": 4,
       "timeout": 3000,
-      "path": "docker/runner-default"
+      "path": "docker/runner-default",
+      "overrides": ["meta.json_reporter.binary_files = true"]
     }
   }
 }

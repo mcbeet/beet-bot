@@ -21,7 +21,7 @@ export const runBeetBot = async ({ clientId, token, database, environments }: Be
     discordClient,
     discordApi,
     db: createDatabase(await createAdapter(database)),
-    environments: ['default', 'custom'], // Object.keys(environments ?? {}),
+    environments: Object.keys(environments ?? {}),
     runner: createPoolRunner(environments)
   })
 

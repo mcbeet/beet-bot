@@ -4,7 +4,8 @@ import { REST } from '@discordjs/rest'
 import { PoolRunner } from '@beet-bot/runner'
 import { Database } from './database'
 import { generateGuildCommands } from './commands'
-import { createConfigDashboard, createEditConfigModal } from './widgets'
+import { ConfigDashboardOptions, createConfigDashboard, createEditConfigModal } from './widgets'
+import { createReport } from './report'
 
 export type BeetBotContext = {
   clientId: string
@@ -15,7 +16,7 @@ export type BeetBotContext = {
   runner: PoolRunner
 }
 
-export const handleInteractions = ({ clientId, discordClient, discordApi, db, environments }: BeetBotContext) => {
+export const handleInteractions = ({ clientId, discordClient, discordApi, db, environments, runner }: BeetBotContext) => {
   const updateGuildCommands = async (guildId: string) => {
     try {
       await discordApi.put(Routes.applicationGuildCommands(clientId, guildId), {
@@ -71,22 +72,32 @@ export const handleInteractions = ({ clientId, discordClient, discordApi, db, en
     if (interaction.inGuild() && interaction.isCommand()) {
       if (interaction.commandName === 'bconf') {
         const guildInfo = await db.getGuildInfo(interaction.guildId)
-        const configId = interaction.options.getString('id')
+        const currentConfigs = Object.keys(guildInfo.configurations)
+        const configId = interaction.options.getString('config')
 
         if (configId) {
           if (configId.match(/^[a-zA-Z0-9_]{3,20}$/)) {
-            await interaction.showModal(createEditConfigModal(guildInfo, configId))
+            if (currentConfigs.includes(configId) || currentConfigs.length < 5) {
+              await interaction.showModal(createEditConfigModal({
+                guildInfo,
+                selected: configId,
+                immediate: true
+              }))
+            } else {
+              await interaction.reply(createConfigDashboard({
+                guildInfo,
+                error: 'Reached 5 configurations limit'
+              }))
+            }
           } else {
             await interaction.reply(createConfigDashboard({
               guildInfo,
-              error: `Invalid configuration id \`${configId}\``,
-              ephemeral: true
+              error: `Invalid configuration id \`${configId}\``
             }))
           }
         } else {
           await interaction.reply(createConfigDashboard({
-            guildInfo,
-            ephemeral: true
+            guildInfo
           }))
         }
       }
@@ -111,7 +122,10 @@ export const handleInteractions = ({ clientId, discordClient, discordApi, db, en
         const guildInfo = await db.getGuildInfo(interaction.guildId)
 
         if (name === 'actionEditSelected') {
-          await interaction.showModal(createEditConfigModal(guildInfo, configId))
+          await interaction.showModal(createEditConfigModal({
+            guildInfo,
+            selected: configId
+          }))
         } else if (name === 'actionDeleteSelected') {
           delete guildInfo.configurations[configId]
           await db.setGuildInfo(interaction.guildId, guildInfo)
@@ -119,6 +133,7 @@ export const handleInteractions = ({ clientId, discordClient, discordApi, db, en
             guildInfo,
             success: `Successfully deleted configuration \`${configId}\``
           }))
+          await updateGuildCommands(interaction.guildId)
         }
       }
     }
@@ -126,7 +141,12 @@ export const handleInteractions = ({ clientId, discordClient, discordApi, db, en
     if (interaction.inGuild() && interaction.isModalSubmit()) {
       const [scope, name] = interaction.customId.split('.')
 
-      if (scope === 'editConfig') {
+      if (scope === 'editConfig' || scope === 'editConfigImmediate') {
+        const updateDashboard = (options: ConfigDashboardOptions) =>
+          scope === 'editConfigImmediate'
+            ? interaction.reply(createConfigDashboard(options))
+            : interaction.update(createConfigDashboard(options))
+
         const guildInfo = await db.getGuildInfo(interaction.guildId)
 
         const configId = name
@@ -136,41 +156,37 @@ export const handleInteractions = ({ clientId, discordClient, discordApi, db, en
         let newConfigData = interaction.fields.getTextInputValue('editConfig.configData')
 
         if (!newConfigId.match(/^[a-zA-Z0-9_]{3,20}$/)) {
-          return interaction.reply(createConfigDashboard({
+          return updateDashboard({
             guildInfo,
             selected: configId,
-            error: `Invalid configuration id \`${newConfigId}\``,
-            ephemeral: true
-          }))
+            error: `Invalid configuration id \`${newConfigId}\``
+          })
         }
 
         if (!environments.includes(newConfigRunner)) {
-          return interaction.reply(createConfigDashboard({
+          return updateDashboard({
             guildInfo,
             selected: configId,
-            error: `Invalid runner \`${newConfigRunner}\``,
-            ephemeral: true
-          }))
+            error: `Invalid runner \`${newConfigRunner}\``
+          })
         }
 
         try {
           newConfigData = JSON.parse(newConfigData)
         } catch {
-          return interaction.reply(createConfigDashboard({
+          return updateDashboard({
             guildInfo,
             selected: configId,
-            error: "Couldn't parse json configuration\n```\n" + newConfigData + '\n```',
-            ephemeral: true
-          }))
+            error: "Couldn't parse json configuration\n```\n" + newConfigData + '\n```'
+          })
         }
 
         if (typeof newConfigData !== 'object') {
-          return interaction.reply(createConfigDashboard({
+          return updateDashboard({
             guildInfo,
             selected: configId,
-            error: 'Configuration must be a json object\n```\n' + JSON.stringify(newConfigData, undefined, 2) + '\n```',
-            ephemeral: true
-          }))
+            error: 'Configuration must be a json object\n```\n' + JSON.stringify(newConfigData, undefined, 2) + '\n```'
+          })
         }
 
         delete guildInfo.configurations[configId]
@@ -182,12 +198,48 @@ export const handleInteractions = ({ clientId, discordClient, discordApi, db, en
 
         await db.setGuildInfo(interaction.guildId, guildInfo)
 
-        interaction.reply(createConfigDashboard({
+        updateDashboard({
           guildInfo,
           selected: newConfigId,
-          success: `Successfully updated configuration \`${newConfigId}\``,
-          ephemeral: true
-        }))
+          success: `Successfully updated configuration \`${newConfigId}\``
+        })
+
+        await updateGuildCommands(interaction.guildId)
+      }
+    }
+
+    if (interaction.inGuild() && interaction.isMessageContextMenu()) {
+      const guildInfo = await db.getGuildInfo(interaction.guildId)
+      const configMatch = Object.values(guildInfo.configurations).filter(config => config.title === interaction.commandName)
+
+      if (configMatch.length > 0) {
+        const { runner: name, data } = configMatch[0]
+
+        if (!data.pipeline) {
+          data.pipeline = []
+        }
+
+        data.pipeline.unshift('lectern.contrib.messaging')
+
+        if (!data.meta) {
+          data.meta = {}
+        }
+
+        if (!data.meta.messaging) {
+          data.meta.messaging = {}
+        }
+
+        data.meta.messaging.input = interaction.targetMessage.content
+
+        let result
+
+        try {
+          result = await runner(name, data)
+        } catch (err) {
+          return interaction.reply(`Environment failure: ${err}`)
+        }
+
+        await interaction.reply(createReport(result))
       }
     }
   })

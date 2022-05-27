@@ -6,10 +6,9 @@ export type ConfigDashboardOptions = {
   selected?: string
   success?: string
   error?: string
-  ephemeral?: boolean
 }
 
-export const createConfigDashboard = ({ guildInfo, selected, success, error, ephemeral = false }: ConfigDashboardOptions) => {
+export const createConfigDashboard = ({ guildInfo, selected, success, error }: ConfigDashboardOptions) => {
   const options = Object.entries(guildInfo.configurations)
     .map(([configId, config]) => ({
       label: configId,
@@ -19,7 +18,7 @@ export const createConfigDashboard = ({ guildInfo, selected, success, error, eph
     }))
 
   return {
-    ephemeral,
+    ephemeral: true,
     embeds: success
       ? [new MessageEmbed().setDescription(success).setColor('#00FF00')]
       : error
@@ -61,7 +60,13 @@ export const createConfigDashboard = ({ guildInfo, selected, success, error, eph
   }
 }
 
-export const createEditConfigModal = (guildInfo: GuildInfo, selected: string) => {
+export type EditConfigModalOptions = {
+  guildInfo: GuildInfo
+  selected: string
+  immediate?: boolean
+}
+
+export const createEditConfigModal = ({ guildInfo, selected, immediate = false }: EditConfigModalOptions) => {
   const config = guildInfo.configurations[selected] ?? {}
 
   const id = new TextInputComponent()
@@ -109,8 +114,8 @@ export const createEditConfigModal = (guildInfo: GuildInfo, selected: string) =>
   }
 
   return new Modal()
-    .setCustomId(`editConfig.${selected}`)
-    .setTitle(`Edit configuration "${selected}"`)
+    .setCustomId(`editConfig${immediate ? 'Immediate' : ''}.${selected}`)
+    .setTitle('Edit configuration')
     .setComponents(
       new MessageActionRow({ components: [id] }),
       new MessageActionRow({ components: [title] }),

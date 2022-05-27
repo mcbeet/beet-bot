@@ -1,6 +1,6 @@
 import { execa } from 'execa'
 
-export const setupDockerBuilder = async (name: string, path: string) => {
+export const setupDockerBuilder = async (name: string, path: string, overrides: string[] = []) => {
   const tag = `beet-bot-${name}`
 
   try {
@@ -17,7 +17,7 @@ export const setupDockerBuilder = async (name: string, path: string) => {
 
     const handle = execa('docker', [
       'run', '--name', container, '--rm', '-i', tag,
-      'beet', '-p', '@beet/preset_stdin.yml', 'build', '--json'
+      'beet', '-p', '@beet/preset_stdin.yml', ...overrides.flatMap(override => ['-s', override]), 'build', '--json'
     ])
 
     const stop = async () => {
