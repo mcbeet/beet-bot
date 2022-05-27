@@ -8,6 +8,14 @@ export type BuildPackInfo = {
   zip?: string
 }
 
+export type BuildLogInfo = {
+  level: string
+  prefix: string
+  message: string
+  annotation?: string
+  details?: string[]
+}
+
 export type BuildInfo = {
   status: 'success' | 'error' | 'unknown'
   error?: {
@@ -15,8 +23,30 @@ export type BuildInfo = {
     exception?: string
   }
   stdout?: string
+  log?: BuildLogInfo[]
   data_pack?: BuildPackInfo
   resource_pack?: BuildPackInfo
+}
+
+const formatLog = (log?: BuildLogInfo[]) => {
+  if (!log) {
+    return ''
+  }
+
+  return log
+    .map(({ level, message, annotation, details }) => {
+      let result = level.toUpperCase().padEnd(7) + message + '\n'
+      if (annotation) {
+        result += annotation + '\n'
+      }
+      if (details) {
+        for (const line of details) {
+          result += line + '\n'
+        }
+      }
+      return result
+    })
+    .join('')
 }
 
 const formatPackContents = ({ empty, text_files, binary_files }: BuildPackInfo) => {
@@ -58,11 +88,15 @@ const reduceLargestSection = (sections: string[]) => {
   return sections
 }
 
-export const createReport = ({ error, stdout, data_pack, resource_pack }: BuildInfo) => {
+export const createReport = ({ error, log, stdout, data_pack, resource_pack }: BuildInfo) => {
+  const formattedLog = formatLog(log)
+
   let attachStdout = ''
+  let attachLog = ''
   let attachTraceback = ''
 
   let stdoutSection = stdout ? '```\n' + stdout + '\n```\n' : ''
+  let logSection = formattedLog ? '```\n' + formattedLog + '```\n' : ''
   let errorSection = error ? '```\n' + error.message + (error?.exception ? '\n\n' + error.exception : '') + '\n```' : ''
 
   // eslint-disable-next-line prefer-const
@@ -70,7 +104,7 @@ export const createReport = ({ error, stdout, data_pack, resource_pack }: BuildI
   // eslint-disable-next-line prefer-const
   let [shouldZipResourcePack, resourcePackSections, resourcePackImages] = formatPackContents(resource_pack ?? {})
 
-  const joinContent = () => stdoutSection + errorSection + dataPackSections.join('') + resourcePackSections.join('')
+  const joinContent = () => stdoutSection + logSection + errorSection + dataPackSections.join('') + resourcePackSections.join('')
   let content = joinContent()
 
   while (content.length > 2000) {
@@ -78,6 +112,11 @@ export const createReport = ({ error, stdout, data_pack, resource_pack }: BuildI
       stdoutSection = ''
       if (stdout) {
         attachStdout = stdout
+      }
+    } else if (logSection.length > content.length / 2) {
+      logSection = ''
+      if (formattedLog) {
+        attachLog = formattedLog
       }
     } else if (errorSection.length > content.length / 2) {
       errorSection = error ? '```\n' + error.message + '\n```' : ''
@@ -111,6 +150,10 @@ export const createReport = ({ error, stdout, data_pack, resource_pack }: BuildI
 
   if (attachStdout) {
     files.push({ attachment: Buffer.from(attachStdout, 'utf-8'), name: 'stdout.txt' })
+  }
+
+  if (attachLog) {
+    files.push({ attachment: Buffer.from(attachLog, 'utf-8'), name: 'log.txt' })
   }
 
   if (attachTraceback) {
