@@ -1,3 +1,10 @@
+# [0.3.0](https://github.com/mcbeet/beet-bot/compare/v0.2.0...v0.3.0) (2022-05-27)
+
+
+### Features
+
+* bad code that works ([f75ce16](https://github.com/mcbeet/beet-bot/commit/f75ce1627b1f4e0b5ef2ff142fa45fdbe66e8168))
+
 # [0.2.0](https://github.com/mcbeet/beet-bot/compare/v0.1.0...v0.2.0) (2022-05-26)
 
 

@@ -1,6 +1,6 @@
 {
   "name": "@beet-bot/discord",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Core implementation of the discord bot for the beet server",
   "author": "Valentin Berlier <berlier.v@gmail.com>",
   "license": "MIT",
@@ -40,7 +40,7 @@
     "build": "unbuild"
   },
   "dependencies": {
-    "@beet-bot/runner": "0.2.0",
+    "@beet-bot/runner": "0.3.0",
     "@discordjs/builders": "^0.13.0",
     "@discordjs/rest": "^0.4.1",
     "discord-api-types": "^0.33.0",
