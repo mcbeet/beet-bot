@@ -1,11 +1,11 @@
 import { MessageActionRow, MessageButton, MessageEmbed, MessageSelectMenu, Modal, TextInputComponent } from 'discord.js'
 import { GuildInfo } from './database'
 
-export const createConfigChoice = (guildInfo: GuildInfo) => {
-  const options = Object.entries(guildInfo.configurations)
-    .flatMap(([configId, config]) => configId.startsWith('>')
+export const createActionChoice = (guildInfo: GuildInfo) => {
+  const options = Object.entries(guildInfo.actions)
+    .flatMap(([actionId, action]) => actionId.startsWith('>')
       ? []
-      : [{ label: config.title, value: configId }]
+      : [{ label: action.title, value: actionId }]
     )
 
   return {
@@ -14,12 +14,12 @@ export const createConfigChoice = (guildInfo: GuildInfo) => {
         components: [
           options.length > 0
             ? new MessageSelectMenu()
-              .setCustomId('configChoice.configId')
-              .setPlaceholder('Select beet bot configuration')
+              .setCustomId('actionChoice.actionId')
+              .setPlaceholder('Select action')
               .setOptions(options)
             : new MessageSelectMenu()
-              .setCustomId('configChoice.configIdPlaceholder')
-              .setPlaceholder('Use /bconf my_new_config to create a configuration')
+              .setCustomId('actionChoice.actionIdPlaceholder')
+              .setPlaceholder('Use /bba my_new_action to create an action')
               .setDisabled(true)
               .setOptions({
                 label: 'x',
@@ -31,20 +31,20 @@ export const createConfigChoice = (guildInfo: GuildInfo) => {
   }
 }
 
-export type ConfigDashboardOptions = {
+export type ActionDashboardOptions = {
   guildInfo: GuildInfo
   selected?: string
   success?: string
   error?: string
 }
 
-export const createConfigDashboard = ({ guildInfo, selected, success, error }: ConfigDashboardOptions) => {
-  const options = Object.entries(guildInfo.configurations)
-    .map(([configId, config]) => ({
-      label: configId,
-      description: config.title,
-      value: configId,
-      default: configId === selected
+export const createActionDashboard = ({ guildInfo, selected, success, error }: ActionDashboardOptions) => {
+  const options = Object.entries(guildInfo.actions)
+    .map(([actionId, action]) => ({
+      label: actionId,
+      description: action.title,
+      value: actionId,
+      default: actionId === selected
     }))
 
   return {
@@ -59,12 +59,12 @@ export const createConfigDashboard = ({ guildInfo, selected, success, error }: C
         components: [
           options.length > 0
             ? new MessageSelectMenu()
-              .setCustomId('configDashboard.configId')
-              .setPlaceholder('Select beet bot configuration')
+              .setCustomId('actionDashboard.actionId')
+              .setPlaceholder('Select action')
               .setOptions(options)
             : new MessageSelectMenu()
-              .setCustomId('configDashboard.configIdPlaceholder')
-              .setPlaceholder('Use /bconf my_new_config to create a configuration')
+              .setCustomId('actionDashboard.actionIdPlaceholder')
+              .setPlaceholder('Use /bba my_new_action to create an action')
               .setDisabled(true)
               .setOptions({
                 label: 'x',
@@ -75,12 +75,12 @@ export const createConfigDashboard = ({ guildInfo, selected, success, error }: C
       new MessageActionRow({
         components: [
           new MessageButton()
-            .setCustomId(selected ? `configDashboard.buttonEditSelected.${selected}` : 'configDashboard.buttonEdit')
+            .setCustomId(selected ? `actionDashboard.buttonEditSelected.${selected}` : 'actionDashboard.buttonEdit')
             .setLabel('Edit')
             .setStyle('PRIMARY')
             .setDisabled(!selected),
           new MessageButton()
-            .setCustomId(selected ? `configDashboard.buttonDeleteSelected.${selected}` : 'configDashboard.buttonDelete')
+            .setCustomId(selected ? `actionDashboard.buttonDeleteSelected.${selected}` : 'actionDashboard.buttonDelete')
             .setLabel('Delete')
             .setStyle('DANGER')
             .setDisabled(!selected)
@@ -90,18 +90,18 @@ export const createConfigDashboard = ({ guildInfo, selected, success, error }: C
   }
 }
 
-export type EditConfigModalOptions = {
+export type EditActionModalOptions = {
   guildInfo: GuildInfo
   selected: string
   immediate?: boolean
 }
 
-export const createEditConfigModal = ({ guildInfo, selected, immediate = false }: EditConfigModalOptions) => {
-  const config = guildInfo.configurations[selected] ?? {}
+export const createEditActionModal = ({ guildInfo, selected, immediate = false }: EditActionModalOptions) => {
+  const action = guildInfo.actions[selected] ?? {}
 
   const id = new TextInputComponent()
-    .setCustomId('editConfig.configId')
-    .setLabel('Config id')
+    .setCustomId('editAction.actionId')
+    .setLabel('Action id')
     .setPlaceholder('build_message')
     .setStyle('SHORT')
     .setMinLength(3)
@@ -109,7 +109,7 @@ export const createEditConfigModal = ({ guildInfo, selected, immediate = false }
     .setRequired(true)
 
   const title = new TextInputComponent()
-    .setCustomId('editConfig.configTitle')
+    .setCustomId('editAction.actionTitle')
     .setLabel('Action title')
     .setPlaceholder('Build message')
     .setStyle('SHORT')
@@ -117,7 +117,7 @@ export const createEditConfigModal = ({ guildInfo, selected, immediate = false }
     .setRequired(true)
 
   const runner = new TextInputComponent()
-    .setCustomId('editConfig.configRunner')
+    .setCustomId('editAction.actionRunner')
     .setLabel('Runner environment')
     .setPlaceholder('default')
     .setStyle('SHORT')
@@ -125,31 +125,31 @@ export const createEditConfigModal = ({ guildInfo, selected, immediate = false }
     .setMaxLength(20)
     .setRequired(true)
 
-  const data = new TextInputComponent()
-    .setCustomId('editConfig.configData')
+  const config = new TextInputComponent()
+    .setCustomId('editAction.actionConfig')
     .setLabel('Json config')
     .setPlaceholder('{\n  "pipeline": [\n    "mecha"\n  ]\n}')
     .setStyle('PARAGRAPH')
     .setRequired(true)
 
   id.setValue(selected)
-  if (config.title) {
-    title.setValue(config.title)
+  if (action.title) {
+    title.setValue(action.title)
   }
-  if (config.runner) {
-    runner.setValue(config.runner)
+  if (action.runner) {
+    runner.setValue(action.runner)
   }
-  if (config.data) {
-    data.setValue(JSON.stringify(config.data, undefined, 2))
+  if (action.config) {
+    config.setValue(JSON.stringify(action.config, undefined, 2))
   }
 
   return new Modal()
-    .setCustomId(`editConfig${immediate ? 'Immediate' : ''}.${selected}`)
-    .setTitle('Edit configuration')
+    .setCustomId(`editAction${immediate ? 'Immediate' : ''}.${selected}`)
+    .setTitle('Edit action')
     .setComponents(
       new MessageActionRow({ components: [id] }),
       new MessageActionRow({ components: [title] }),
       new MessageActionRow({ components: [runner] }),
-      new MessageActionRow({ components: [data] })
+      new MessageActionRow({ components: [config] })
     )
 }

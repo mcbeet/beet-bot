@@ -4,19 +4,19 @@ import { GuildInfo } from './database'
 
 export const BUILTIN_COMMANDS = [
   new SlashCommandBuilder()
-    .setName('bconf')
-    .setDescription('Manage beet bot configuration')
+    .setName('bba')
+    .setDescription('Manage beet bot actions')
     .addStringOption(option =>
       option
-        .setName('config')
-        .setDescription('The id of the configuration')
+        .setName('action')
+        .setDescription('The id of the action')
     )
 ]
 
-export const generateGuildCommands = ({ configurations }: GuildInfo) => [
-  ...Object.entries(configurations)
-    .flatMap(([configId, config]) => configId.startsWith('>')
-      ? [new ContextMenuCommandBuilder().setName(config.title).setType(ApplicationCommandType.Message)]
+export const generateGuildCommands = ({ actions }: GuildInfo) => [
+  ...Object.entries(actions)
+    .flatMap(([actionId, action]) => actionId.startsWith('>')
+      ? [new ContextMenuCommandBuilder().setName(action.title).setType(ApplicationCommandType.Message)]
       : []),
   ...BUILTIN_COMMANDS
 ]

@@ -4,7 +4,7 @@ import { REST } from '@discordjs/rest'
 import { PoolRunner } from '@beet-bot/runner'
 import { Database } from './database'
 import { generateGuildCommands } from './commands'
-import { ConfigDashboardOptions, createConfigChoice, createConfigDashboard, createEditConfigModal } from './widgets'
+import { ActionDashboardOptions, createActionChoice, createActionDashboard, createEditActionModal } from './widgets'
 import { createReport } from './report'
 import { invokeBuild } from './build'
 
@@ -25,6 +25,7 @@ export const handleInteractions = ({ clientId, discordClient, discordApi, db, en
       })
       console.log(`INFO: Updated commands for guild ${guildId}`)
     } catch (err) {
+      console.log(err)
       console.log(`ERROR: Failed to update commands for guild ${guildId}`)
     }
   }
@@ -73,7 +74,7 @@ export const handleInteractions = ({ clientId, discordClient, discordApi, db, en
     if (!message.author.bot && message.inGuild() && message.mentions.users.has(clientId)) {
       const guildInfo = await db.getGuildInfo(message.guildId)
 
-      const reply = await message.reply(createConfigChoice(guildInfo))
+      const reply = await message.reply(createActionChoice(guildInfo))
 
       let interaction: SelectMenuInteraction<CacheType>
 
@@ -95,8 +96,8 @@ export const handleInteractions = ({ clientId, discordClient, discordApi, db, en
         return
       }
 
-      const configId = interaction.values[0]
-      const { runner: name, data } = guildInfo.configurations[configId]
+      const actionId = interaction.values[0]
+      const { runner: name, config } = guildInfo.actions[actionId]
 
       let deferred = false
       const tid = setTimeout(() => {
@@ -104,7 +105,7 @@ export const handleInteractions = ({ clientId, discordClient, discordApi, db, en
         interaction.deferUpdate()
       }, 800)
 
-      await invokeBuild(runner, name, data, message.content, async (info) => {
+      await invokeBuild(runner, name, config, message.content, async (info) => {
         if (deferred) {
           await interaction.editReply(createReport(info))
         } else {
@@ -117,36 +118,36 @@ export const handleInteractions = ({ clientId, discordClient, discordApi, db, en
 
   discordClient.on('interactionCreate', async (interaction) => {
     if (interaction.inGuild() && interaction.isCommand()) {
-      if (interaction.commandName === 'bconf') {
+      if (interaction.commandName === 'bba') {
         const guildInfo = await db.getGuildInfo(interaction.guildId)
-        const currentConfigs = Object.keys(guildInfo.configurations)
-        const configId = interaction.options.getString('config')
+        const currentActions = Object.keys(guildInfo.actions)
+        const actionId = interaction.options.getString('action')
 
-        if (configId) {
-          if (configId.match(/^>?[a-zA-Z0-9_]{3,20}$/)) {
+        if (actionId) {
+          if (actionId.match(/^>?[a-zA-Z0-9_]{3,20}$/)) {
             if (
-              currentConfigs.includes(configId) ||
-              !configId.startsWith('>') ||
-              currentConfigs.filter(id => id.startsWith('>')).length < 5) {
-              await interaction.showModal(createEditConfigModal({
+              currentActions.includes(actionId) ||
+              !actionId.startsWith('>') ||
+              currentActions.filter(id => id.startsWith('>')).length < 5) {
+              await interaction.showModal(createEditActionModal({
                 guildInfo,
-                selected: configId,
+                selected: actionId,
                 immediate: true
               }))
             } else {
-              await interaction.reply(createConfigDashboard({
+              await interaction.reply(createActionDashboard({
                 guildInfo,
-                error: 'Already reached limit of 5 context menu configurations'
+                error: 'Already reached limit of 5 context menu actions'
               }))
             }
           } else {
-            await interaction.reply(createConfigDashboard({
+            await interaction.reply(createActionDashboard({
               guildInfo,
-              error: `Invalid configuration id \`${configId}\``
+              error: `Invalid action id \`${actionId}\``
             }))
           }
         } else {
-          await interaction.reply(createConfigDashboard({
+          await interaction.reply(createActionDashboard({
             guildInfo
           }))
         }
@@ -156,9 +157,9 @@ export const handleInteractions = ({ clientId, discordClient, discordApi, db, en
     if (interaction.inGuild() && interaction.isSelectMenu()) {
       const [scope, name] = interaction.customId.split('.')
 
-      if (scope === 'configDashboard' && name === 'configId') {
+      if (scope === 'actionDashboard' && name === 'actionId') {
         const guildInfo = await db.getGuildInfo(interaction.guildId)
-        await interaction.update(createConfigDashboard({
+        await interaction.update(createActionDashboard({
           guildInfo,
           selected: interaction.values[0]
         }))
@@ -166,22 +167,22 @@ export const handleInteractions = ({ clientId, discordClient, discordApi, db, en
     }
 
     if (interaction.inGuild() && interaction.isButton()) {
-      const [scope, name, configId] = interaction.customId.split('.')
+      const [scope, name, actionId] = interaction.customId.split('.')
 
-      if (scope === 'configDashboard') {
+      if (scope === 'actionDashboard') {
         const guildInfo = await db.getGuildInfo(interaction.guildId)
 
         if (name === 'buttonEditSelected') {
-          await interaction.showModal(createEditConfigModal({
+          await interaction.showModal(createEditActionModal({
             guildInfo,
-            selected: configId
+            selected: actionId
           }))
         } else if (name === 'buttonDeleteSelected') {
-          delete guildInfo.configurations[configId]
+          delete guildInfo.actions[actionId]
           await db.setGuildInfo(interaction.guildId, guildInfo)
-          await interaction.update(createConfigDashboard({
+          await interaction.update(createActionDashboard({
             guildInfo,
-            success: `Successfully deleted configuration \`${configId}\``
+            success: `Successfully deleted action \`${actionId}\``
           }))
           await updateGuildCommands(interaction.guildId)
         }
@@ -191,81 +192,81 @@ export const handleInteractions = ({ clientId, discordClient, discordApi, db, en
     if (interaction.inGuild() && interaction.isModalSubmit()) {
       const [scope, name] = interaction.customId.split('.')
 
-      if (scope === 'editConfig' || scope === 'editConfigImmediate') {
-        const updateDashboard = (options: ConfigDashboardOptions) =>
-          scope === 'editConfigImmediate'
-            ? interaction.reply(createConfigDashboard(options))
-            : interaction.update(createConfigDashboard(options))
+      if (scope === 'editAction' || scope === 'editActionImmediate') {
+        const updateDashboard = (options: ActionDashboardOptions) =>
+          scope === 'editActionImmediate'
+            ? interaction.reply(createActionDashboard(options))
+            : interaction.update(createActionDashboard(options))
 
         const guildInfo = await db.getGuildInfo(interaction.guildId)
 
-        const configId = name
-        const newConfigId = interaction.fields.getTextInputValue('editConfig.configId')
-        const newConfigTitle = interaction.fields.getTextInputValue('editConfig.configTitle')
-        const newConfigRunner = interaction.fields.getTextInputValue('editConfig.configRunner')
-        let newConfigData = interaction.fields.getTextInputValue('editConfig.configData')
+        const actionId = name
+        const newActionId = interaction.fields.getTextInputValue('editAction.actionId')
+        const newActionTitle = interaction.fields.getTextInputValue('editAction.actionTitle')
+        const newActionRunner = interaction.fields.getTextInputValue('editAction.actionRunner')
+        let newActionConfig = interaction.fields.getTextInputValue('editAction.actionConfig')
 
-        if (!newConfigId.match(/^>?[a-zA-Z0-9_]{3,20}$/)) {
+        if (!newActionId.match(/^>?[a-zA-Z0-9_]{3,20}$/)) {
           await updateDashboard({
             guildInfo,
-            selected: configId,
-            error: `Invalid configuration id \`${newConfigId}\``
+            selected: actionId,
+            error: `Invalid action id \`${newActionId}\``
           })
           return
         }
 
-        if (newConfigId !== configId &&
-          newConfigId.startsWith('>') &&
-          Object.keys(guildInfo.configurations).filter(id => id !== configId && id.startsWith('>')).length >= 5) {
+        if (newActionId !== actionId &&
+          newActionId.startsWith('>') &&
+          Object.keys(guildInfo.actions).filter(id => id !== actionId && id.startsWith('>')).length >= 5) {
           await updateDashboard({
             guildInfo,
-            error: 'Already reached limit of 5 context menu configurations'
+            error: 'Already reached limit of 5 context menu actions'
           })
           return
         }
 
-        if (!environments.includes(newConfigRunner)) {
+        if (!environments.includes(newActionRunner)) {
           await updateDashboard({
             guildInfo,
-            selected: configId,
-            error: `Invalid runner \`${newConfigRunner}\``
+            selected: actionId,
+            error: `Invalid runner \`${newActionRunner}\``
           })
           return
         }
 
         try {
-          newConfigData = JSON.parse(newConfigData)
+          newActionConfig = JSON.parse(newActionConfig)
         } catch {
           await updateDashboard({
             guildInfo,
-            selected: configId,
-            error: "Couldn't parse json configuration\n```\n" + newConfigData + '\n```'
+            selected: actionId,
+            error: "Couldn't parse json config\n```\n" + newActionConfig + '\n```'
           })
           return
         }
 
-        if (typeof newConfigData !== 'object') {
+        if (typeof newActionConfig !== 'object') {
           await updateDashboard({
             guildInfo,
-            selected: configId,
-            error: 'Configuration must be a json object\n```\n' + JSON.stringify(newConfigData, undefined, 2) + '\n```'
+            selected: actionId,
+            error: 'Action config must be a json object\n```\n' + JSON.stringify(newActionConfig, undefined, 2) + '\n```'
           })
           return
         }
 
-        delete guildInfo.configurations[configId]
-        guildInfo.configurations[newConfigId] = {
-          title: newConfigTitle,
-          runner: newConfigRunner,
-          data: newConfigData
+        delete guildInfo.actions[actionId]
+        guildInfo.actions[newActionId] = {
+          title: newActionTitle,
+          runner: newActionRunner,
+          config: newActionConfig
         }
 
         await db.setGuildInfo(interaction.guildId, guildInfo)
 
         updateDashboard({
           guildInfo,
-          selected: newConfigId,
-          success: `Successfully updated configuration \`${newConfigId}\``
+          selected: newActionId,
+          success: `Successfully updated action \`${newActionId}\``
         })
 
         await updateGuildCommands(interaction.guildId)
@@ -274,10 +275,10 @@ export const handleInteractions = ({ clientId, discordClient, discordApi, db, en
 
     if (interaction.inGuild() && interaction.isMessageContextMenu()) {
       const guildInfo = await db.getGuildInfo(interaction.guildId)
-      const configMatch = Object.values(guildInfo.configurations).filter(config => config.title === interaction.commandName)
+      const actionMatch = Object.values(guildInfo.actions).filter(action => action.title === interaction.commandName)
 
-      if (configMatch.length > 0) {
-        const { runner: name, data } = configMatch[0]
+      if (actionMatch.length > 0) {
+        const { runner: name, config } = actionMatch[0]
 
         let deferred = false
         const tid = setTimeout(() => {
@@ -285,7 +286,7 @@ export const handleInteractions = ({ clientId, discordClient, discordApi, db, en
           interaction.deferReply()
         }, 800)
 
-        await invokeBuild(runner, name, data, interaction.targetMessage.content, async (info) => {
+        await invokeBuild(runner, name, config, interaction.targetMessage.content, async (info) => {
           if (deferred) {
             await interaction.editReply(createReport(info))
           } else {
