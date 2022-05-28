@@ -184,7 +184,9 @@ export const handleInteractions = ({ clientId, discordClient, discordApi, db, en
             guildInfo,
             success: `Successfully deleted action \`${actionId}\``
           }))
-          await updateGuildCommands(interaction.guildId)
+          if (actionId.startsWith('menu:')) {
+            await updateGuildCommands(interaction.guildId)
+          }
         }
       }
     }
@@ -269,7 +271,9 @@ export const handleInteractions = ({ clientId, discordClient, discordApi, db, en
           success: `Successfully updated action \`${newActionId}\``
         })
 
-        await updateGuildCommands(interaction.guildId)
+        if (actionId.startsWith('menu:') || newActionId.startsWith('menu:')) {
+          await updateGuildCommands(interaction.guildId)
+        }
       }
     }
 
