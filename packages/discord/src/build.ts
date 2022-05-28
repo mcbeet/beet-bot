@@ -2,17 +2,17 @@ import { PoolRunner } from '@beet-bot/runner'
 import { BuildInfo } from './report'
 
 export const invokeBuild = async (runner: PoolRunner, name: string, config: any, input: string, showReport: (info: BuildInfo) => Promise<void>) => {
-  if (!config.pipeline) {
+  if (!Array.isArray(config.pipeline)) {
     config.pipeline = []
   }
 
   config.pipeline.unshift('lectern.contrib.messaging')
 
-  if (!config.meta) {
+  if (typeof config.meta !== 'object') {
     config.meta = {}
   }
 
-  if (!config.meta.messaging) {
+  if (typeof config.meta.messaging !== 'object') {
     config.meta.messaging = {}
   }
 
