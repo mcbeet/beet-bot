@@ -1,6 +1,37 @@
 import { MessageActionRow, MessageButton, MessageEmbed, MessageSelectMenu, Modal, TextInputComponent } from 'discord.js'
 import { GuildInfo } from './database'
 
+export const createConfigChoice = (guildInfo: GuildInfo) => {
+  const options = Object.entries(guildInfo.configurations)
+    .map(([configId, config]) => ({
+      label: configId,
+      description: config.title,
+      value: configId
+    }))
+
+  return {
+    components: [
+      new MessageActionRow({
+        components: [
+          options.length > 0
+            ? new MessageSelectMenu()
+              .setCustomId('configChoice.configId')
+              .setPlaceholder('Select beet bot configuration')
+              .setOptions(options)
+            : new MessageSelectMenu()
+              .setCustomId('configChoice.configIdPlaceholder')
+              .setPlaceholder('Use /bconf my_new_config to create a configuration')
+              .setDisabled(true)
+              .setOptions({
+                label: 'x',
+                value: 'x'
+              })
+        ]
+      })
+    ]
+  }
+}
+
 export type ConfigDashboardOptions = {
   guildInfo: GuildInfo
   selected?: string

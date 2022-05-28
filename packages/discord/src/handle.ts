@@ -1,11 +1,11 @@
 import { Routes } from 'discord-api-types/v10'
-import { Client } from 'discord.js'
+import { CacheType, Client, SelectMenuInteraction } from 'discord.js'
 import { REST } from '@discordjs/rest'
 import { PoolRunner } from '@beet-bot/runner'
 import { Database } from './database'
 import { generateGuildCommands } from './commands'
-import { ConfigDashboardOptions, createConfigDashboard, createEditConfigModal } from './widgets'
-import { BuildInfo, createReport } from './report'
+import { ConfigDashboardOptions, createConfigChoice, createConfigDashboard, createEditConfigModal } from './widgets'
+import { createReport } from './report'
 import { invokeBuild } from './build'
 
 export type BeetBotContext = {
@@ -67,6 +67,52 @@ export const handleInteractions = ({ clientId, discordClient, discordApi, db, en
     console.log(`INFO: Role updated in guild ${role.guild.id}`)
     await addGuild(role.guild.id)
     await updateGuildCommands(role.guild.id)
+  })
+
+  discordClient.on('messageCreate', async (message) => {
+    if (!message.author.bot && message.inGuild() && message.mentions.users.has(clientId)) {
+      const guildInfo = await db.getGuildInfo(message.guildId)
+
+      const reply = await message.reply(createConfigChoice(guildInfo))
+
+      let interaction: SelectMenuInteraction<CacheType>
+
+      try {
+        interaction = await reply.awaitMessageComponent({
+          componentType: 'SELECT_MENU',
+          time: 15000,
+          filter: (interaction) => {
+            if (interaction.user.id === message.author.id) {
+              return true
+            } else {
+              interaction.deferUpdate()
+              return false
+            }
+          }
+        })
+      } catch (err) {
+        await reply.delete()
+        return
+      }
+
+      const configId = interaction.values[0]
+      const { runner: name, data } = guildInfo.configurations[configId]
+
+      let deferred = false
+      const tid = setTimeout(() => {
+        deferred = true
+        interaction.deferUpdate()
+      }, 800)
+
+      await invokeBuild(runner, name, data, message.content, async (info) => {
+        if (deferred) {
+          await interaction.editReply(createReport(info))
+        } else {
+          clearTimeout(tid)
+          await interaction.update(createReport(info))
+        }
+      })
+    }
   })
 
   discordClient.on('interactionCreate', async (interaction) => {
@@ -226,7 +272,7 @@ export const handleInteractions = ({ clientId, discordClient, discordApi, db, en
           interaction.deferReply()
         }, 800)
 
-        await invokeBuild(runner, name, data, interaction.targetMessage.content, async (info: BuildInfo) => {
+        await invokeBuild(runner, name, data, interaction.targetMessage.content, async (info) => {
           if (deferred) {
             await interaction.editReply(createReport(info))
           } else {

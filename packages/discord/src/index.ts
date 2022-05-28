@@ -13,7 +13,7 @@ export type BeetBotOptions = {
 }
 
 export const runBeetBot = async ({ clientId, token, database, environments }: BeetBotOptions) => {
-  const discordClient = new Client({ intents: [Intents.FLAGS.GUILDS] })
+  const discordClient = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] })
   const discordApi = new REST({ version: '10' }).setToken(token)
 
   handleInteractions({

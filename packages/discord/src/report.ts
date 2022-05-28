@@ -172,5 +172,9 @@ export const createReport = ({ error, log, stdout, data_pack, resource_pack }: B
     content = '```\nNo output\n```'
   }
 
-  return { content: content || undefined, files }
+  return {
+    content: content || undefined,
+    files,
+    components: []
+  }
 }
