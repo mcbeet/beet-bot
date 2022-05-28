@@ -41,8 +41,8 @@ export type ActionDashboardOptions = {
 export const createActionDashboard = ({ guildInfo, selected, success, error }: ActionDashboardOptions) => {
   const options = Object.entries(guildInfo.actions)
     .map(([actionId, action]) => ({
-      label: actionId,
-      description: action.title,
+      label: action.title,
+      description: actionId,
       value: actionId,
       default: actionId === selected
     }))
