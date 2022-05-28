@@ -15,7 +15,7 @@ export const BUILTIN_COMMANDS = [
 
 export const generateGuildCommands = ({ actions }: GuildInfo) => [
   ...Object.entries(actions)
-    .flatMap(([actionId, action]) => actionId.startsWith('>')
+    .flatMap(([actionId, action]) => actionId.startsWith('menu:')
       ? [new ContextMenuCommandBuilder().setName(action.title).setType(ApplicationCommandType.Message)]
       : []),
   ...BUILTIN_COMMANDS

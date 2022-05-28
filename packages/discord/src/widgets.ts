@@ -3,7 +3,7 @@ import { GuildInfo } from './database'
 
 export const createActionChoice = (guildInfo: GuildInfo) => {
   const options = Object.entries(guildInfo.actions)
-    .flatMap(([actionId, action]) => actionId.startsWith('>')
+    .flatMap(([actionId, action]) => actionId.startsWith('menu:')
       ? []
       : [{ label: action.title, value: actionId }]
     )

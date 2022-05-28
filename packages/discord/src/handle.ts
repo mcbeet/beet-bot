@@ -124,11 +124,11 @@ export const handleInteractions = ({ clientId, discordClient, discordApi, db, en
         const actionId = interaction.options.getString('action')
 
         if (actionId) {
-          if (actionId.match(/^>?[a-zA-Z0-9_]{3,20}$/)) {
+          if (actionId.match(/^(?:menu:)?[a-zA-Z0-9_]{3,20}$/)) {
             if (
               currentActions.includes(actionId) ||
-              !actionId.startsWith('>') ||
-              currentActions.filter(id => id.startsWith('>')).length < 5) {
+              !actionId.startsWith('menu:') ||
+              currentActions.filter(id => id.startsWith('menu:')).length < 5) {
               await interaction.showModal(createEditActionModal({
                 guildInfo,
                 selected: actionId,
@@ -206,7 +206,7 @@ export const handleInteractions = ({ clientId, discordClient, discordApi, db, en
         const newActionRunner = interaction.fields.getTextInputValue('editAction.actionRunner')
         let newActionConfig = interaction.fields.getTextInputValue('editAction.actionConfig')
 
-        if (!newActionId.match(/^>?[a-zA-Z0-9_]{3,20}$/)) {
+        if (!newActionId.match(/^(?:menu:)?[a-zA-Z0-9_]{3,20}$/)) {
           await updateDashboard({
             guildInfo,
             selected: actionId,
@@ -216,8 +216,8 @@ export const handleInteractions = ({ clientId, discordClient, discordApi, db, en
         }
 
         if (newActionId !== actionId &&
-          newActionId.startsWith('>') &&
-          Object.keys(guildInfo.actions).filter(id => id !== actionId && id.startsWith('>')).length >= 5) {
+          newActionId.startsWith('menu:') &&
+          Object.keys(guildInfo.actions).filter(id => id !== actionId && id.startsWith('menu:')).length >= 5) {
           await updateDashboard({
             guildInfo,
             error: 'Already reached limit of 5 context menu actions'
