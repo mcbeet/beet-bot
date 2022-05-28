@@ -75,12 +75,12 @@ export const createConfigDashboard = ({ guildInfo, selected, success, error }: C
       new MessageActionRow({
         components: [
           new MessageButton()
-            .setCustomId(selected ? `configDashboard.actionEditSelected.${selected}` : 'configDashboard.actionEdit')
+            .setCustomId(selected ? `configDashboard.buttonEditSelected.${selected}` : 'configDashboard.buttonEdit')
             .setLabel('Edit')
             .setStyle('PRIMARY')
             .setDisabled(!selected),
           new MessageButton()
-            .setCustomId(selected ? `configDashboard.actionDeleteSelected.${selected}` : 'configDashboard.actionDelete')
+            .setCustomId(selected ? `configDashboard.buttonDeleteSelected.${selected}` : 'configDashboard.buttonDelete')
             .setLabel('Delete')
             .setStyle('DANGER')
             .setDisabled(!selected)

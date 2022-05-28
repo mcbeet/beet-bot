@@ -171,12 +171,12 @@ export const handleInteractions = ({ clientId, discordClient, discordApi, db, en
       if (scope === 'configDashboard') {
         const guildInfo = await db.getGuildInfo(interaction.guildId)
 
-        if (name === 'actionEditSelected') {
+        if (name === 'buttonEditSelected') {
           await interaction.showModal(createEditConfigModal({
             guildInfo,
             selected: configId
           }))
-        } else if (name === 'actionDeleteSelected') {
+        } else if (name === 'buttonDeleteSelected') {
           delete guildInfo.configurations[configId]
           await db.setGuildInfo(interaction.guildId, guildInfo)
           await interaction.update(createConfigDashboard({
@@ -210,6 +210,16 @@ export const handleInteractions = ({ clientId, discordClient, discordApi, db, en
             guildInfo,
             selected: configId,
             error: `Invalid configuration id \`${newConfigId}\``
+          })
+          return
+        }
+
+        if (newConfigId !== configId &&
+          newConfigId.startsWith('>') &&
+          Object.keys(guildInfo.configurations).filter(id => id !== configId && id.startsWith('>')).length >= 5) {
+          await updateDashboard({
+            guildInfo,
+            error: 'Already reached limit of 5 context menu configurations'
           })
           return
         }
