@@ -1,3 +1,15 @@
+# [0.4.0](https://github.com/mcbeet/beet-bot/compare/v0.3.2...v0.4.0) (2022-05-28)
+
+
+### Bug Fixes
+
+* extract invokeBuild ([7bb4e37](https://github.com/mcbeet/beet-bot/commit/7bb4e37b9c5d93a2af52cfea752cba4f2a25a17a))
+
+
+### Features
+
+* bot mentions ([a590289](https://github.com/mcbeet/beet-bot/commit/a5902893ce041e9f8b65295654f43b8aa040cab9))
+
 ## [0.3.2](https://github.com/mcbeet/beet-bot/compare/v0.3.1...v0.3.2) (2022-05-27)
 
 
