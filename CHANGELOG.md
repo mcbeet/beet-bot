@@ -1,3 +1,20 @@
+# [0.5.0](https://github.com/mcbeet/beet-bot/compare/v0.4.0...v0.5.0) (2022-05-28)
+
+
+### Bug Fixes
+
+* change menu prefix ([d4530ff](https://github.com/mcbeet/beet-bot/commit/d4530ffa97e1acd2360adc15a001d4ab8819dc0d))
+* handle convert to context menu ([dfe944c](https://github.com/mcbeet/beet-bot/commit/dfe944c4f0a69b043c1145af4bfc2fbea1fb7167))
+* more robust config manipulation ([3e5cdfc](https://github.com/mcbeet/beet-bot/commit/3e5cdfc785f193430fcd9ba3eaaddcef702ec301))
+* only update guild commands when changing actions with menu prefix ([c04ed35](https://github.com/mcbeet/beet-bot/commit/c04ed35bab6bd729371d91b87df9a5e002339026))
+* rename configurations to actions ([427061b](https://github.com/mcbeet/beet-bot/commit/427061bde8ce7686499b132428b1b362d5f64af6))
+* show title for bba command ([4a40d5d](https://github.com/mcbeet/beet-bot/commit/4a40d5d4df9245ad8f67b3e918abba40ad5f2574))
+
+
+### Features
+
+* add prefix for context menu configurations ([046de12](https://github.com/mcbeet/beet-bot/commit/046de12fd3a60e04891c7126d1aba7f596f1d4cd))
+
 # [0.4.0](https://github.com/mcbeet/beet-bot/compare/v0.3.2...v0.4.0) (2022-05-28)
 
 
