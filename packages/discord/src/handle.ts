@@ -123,8 +123,11 @@ export const handleInteractions = ({ clientId, discordClient, discordApi, db, en
         const configId = interaction.options.getString('config')
 
         if (configId) {
-          if (configId.match(/^[a-zA-Z0-9_]{3,20}$/)) {
-            if (currentConfigs.includes(configId) || currentConfigs.length < 5) {
+          if (configId.match(/^>?[a-zA-Z0-9_]{3,20}$/)) {
+            if (
+              currentConfigs.includes(configId) ||
+              !configId.startsWith('>') ||
+              currentConfigs.filter(id => id.startsWith('>')).length < 5) {
               await interaction.showModal(createEditConfigModal({
                 guildInfo,
                 selected: configId,
@@ -133,7 +136,7 @@ export const handleInteractions = ({ clientId, discordClient, discordApi, db, en
             } else {
               await interaction.reply(createConfigDashboard({
                 guildInfo,
-                error: 'Reached 5 configurations limit'
+                error: 'Already reached limit of 5 context menu configurations'
               }))
             }
           } else {
@@ -202,7 +205,7 @@ export const handleInteractions = ({ clientId, discordClient, discordApi, db, en
         const newConfigRunner = interaction.fields.getTextInputValue('editConfig.configRunner')
         let newConfigData = interaction.fields.getTextInputValue('editConfig.configData')
 
-        if (!newConfigId.match(/^[a-zA-Z0-9_]{3,20}$/)) {
+        if (!newConfigId.match(/^>?[a-zA-Z0-9_]{3,20}$/)) {
           await updateDashboard({
             guildInfo,
             selected: configId,

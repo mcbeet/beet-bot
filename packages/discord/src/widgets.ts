@@ -3,11 +3,10 @@ import { GuildInfo } from './database'
 
 export const createConfigChoice = (guildInfo: GuildInfo) => {
   const options = Object.entries(guildInfo.configurations)
-    .map(([configId, config]) => ({
-      label: configId,
-      description: config.title,
-      value: configId
-    }))
+    .flatMap(([configId, config]) => configId.startsWith('>')
+      ? []
+      : [{ label: config.title, value: configId }]
+    )
 
   return {
     components: [

@@ -14,11 +14,9 @@ export const BUILTIN_COMMANDS = [
 ]
 
 export const generateGuildCommands = ({ configurations }: GuildInfo) => [
-  ...Object.values(configurations)
-    .flatMap(config => [
-      new ContextMenuCommandBuilder()
-        .setName(config.title)
-        .setType(ApplicationCommandType.Message)
-    ]),
+  ...Object.entries(configurations)
+    .flatMap(([configId, config]) => configId.startsWith('>')
+      ? [new ContextMenuCommandBuilder().setName(config.title).setType(ApplicationCommandType.Message)]
+      : []),
   ...BUILTIN_COMMANDS
 ]
