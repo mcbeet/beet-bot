@@ -6,6 +6,7 @@ import { Database } from './database'
 import { generateGuildCommands } from './commands'
 import { ConfigDashboardOptions, createConfigDashboard, createEditConfigModal } from './widgets'
 import { BuildInfo, createReport } from './report'
+import { invokeBuild } from './build'
 
 export type BeetBotContext = {
   clientId: string
@@ -219,52 +220,20 @@ export const handleInteractions = ({ clientId, discordClient, discordApi, db, en
       if (configMatch.length > 0) {
         const { runner: name, data } = configMatch[0]
 
-        if (!data.pipeline) {
-          data.pipeline = []
-        }
-
-        data.pipeline.unshift('lectern.contrib.messaging')
-
-        if (!data.meta) {
-          data.meta = {}
-        }
-
-        if (!data.meta.messaging) {
-          data.meta.messaging = {}
-        }
-
-        data.meta.messaging.input = interaction.targetMessage.content
-
         let deferred = false
         const tid = setTimeout(() => {
           deferred = true
           interaction.deferReply()
         }, 800)
 
-        const showReport = async (info: BuildInfo) => {
+        await invokeBuild(runner, name, data, interaction.targetMessage.content, async (info: BuildInfo) => {
           if (deferred) {
             await interaction.editReply(createReport(info))
           } else {
             clearTimeout(tid)
             await interaction.reply(createReport(info))
           }
-        }
-
-        let result
-
-        try {
-          result = await runner(name, data)
-        } catch (err) {
-          await showReport({
-            status: 'error',
-            error: {
-              message: `${err}`
-            }
-          })
-          return
-        }
-
-        await showReport(result)
+        })
       }
     }
   })
