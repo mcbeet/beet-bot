@@ -19,7 +19,7 @@ export const createActionChoice = (guildInfo: GuildInfo) => {
               .setOptions(options)
             : new MessageSelectMenu()
               .setCustomId('actionChoice.actionIdPlaceholder')
-              .setPlaceholder('Use /bba my_new_action to create an action')
+              .setPlaceholder('Use /bbaction my_new_action to create an action')
               .setDisabled(true)
               .setOptions({
                 label: 'x',
@@ -64,7 +64,7 @@ export const createActionDashboard = ({ guildInfo, selected, success, error }: A
               .setOptions(options)
             : new MessageSelectMenu()
               .setCustomId('actionDashboard.actionIdPlaceholder')
-              .setPlaceholder('Use /bba my_new_action to create an action')
+              .setPlaceholder('Use /bbaction my_new_action to create an action')
               .setDisabled(true)
               .setOptions({
                 label: 'x',

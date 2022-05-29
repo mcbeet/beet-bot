@@ -4,13 +4,16 @@ import { GuildInfo } from './database'
 
 export const BUILTIN_COMMANDS = [
   new SlashCommandBuilder()
-    .setName('bba')
+    .setName('bbaction')
     .setDescription('Manage beet bot actions')
     .addStringOption(option =>
       option
         .setName('action')
         .setDescription('The id of the action')
-    )
+    ),
+  new SlashCommandBuilder()
+    .setName('bbstop')
+    .setDescription('Stop the beet bot')
 ]
 
 export const generateGuildCommands = ({ actions }: GuildInfo) => [

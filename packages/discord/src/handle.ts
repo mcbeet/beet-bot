@@ -1,5 +1,5 @@
 import { Routes } from 'discord-api-types/v10'
-import { CacheType, Client, SelectMenuInteraction } from 'discord.js'
+import { CacheType, Client, MessageEmbed, SelectMenuInteraction } from 'discord.js'
 import { REST } from '@discordjs/rest'
 import { PoolRunner } from '@beet-bot/runner'
 import { Database } from './database'
@@ -118,7 +118,7 @@ export const handleInteractions = ({ clientId, discordClient, discordApi, db, en
 
   discordClient.on('interactionCreate', async (interaction) => {
     if (interaction.inGuild() && interaction.isCommand()) {
-      if (interaction.commandName === 'bba') {
+      if (interaction.commandName === 'bbaction') {
         const guildInfo = await db.getGuildInfo(interaction.guildId)
         const currentActions = Object.keys(guildInfo.actions)
         const actionId = interaction.options.getString('action')
@@ -151,6 +151,12 @@ export const handleInteractions = ({ clientId, discordClient, discordApi, db, en
             guildInfo
           }))
         }
+      } else if (interaction.commandName === 'bbstop') {
+        await interaction.reply({
+          embeds: [new MessageEmbed().setDescription('Shutting down the bot').setColor('#FFCC00')]
+        })
+        await discordClient.destroy()
+        process.exit()
       }
     }
 
