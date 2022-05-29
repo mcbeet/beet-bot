@@ -1,3 +1,10 @@
+# [0.7.0](https://github.com/mcbeet/beet-bot/compare/v0.6.0...v0.7.0) (2022-05-29)
+
+
+### Features
+
+* use ssm parameters ([cc36058](https://github.com/mcbeet/beet-bot/commit/cc36058eeb9367f8eafddd4b55a1db4e897fb2d0))
+
 # [0.6.0](https://github.com/mcbeet/beet-bot/compare/v0.5.0...v0.6.0) (2022-05-29)
 
 

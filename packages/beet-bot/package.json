@@ -1,6 +1,6 @@
 {
   "name": "beet-bot",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "The beet bot",
   "author": "Valentin Berlier <berlier.v@gmail.com>",
   "license": "MIT",
@@ -40,7 +40,7 @@
     "build": "unbuild"
   },
   "dependencies": {
-    "@beet-bot/discord": "0.6.0",
+    "@beet-bot/discord": "0.7.0",
     "dotenv": "^16.0.1",
     "mri": "^1.2.0"
   },
