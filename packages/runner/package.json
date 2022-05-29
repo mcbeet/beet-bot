@@ -1,6 +1,6 @@
 {
   "name": "@beet-bot/runner",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Run beet builds from nodejs",
   "author": "Valentin Berlier <berlier.v@gmail.com>",
   "license": "MIT",

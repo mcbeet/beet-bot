@@ -1,3 +1,11 @@
+# [0.6.0](https://github.com/mcbeet/beet-bot/compare/v0.5.0...v0.6.0) (2022-05-29)
+
+
+### Features
+
+* add bbstop ([4350870](https://github.com/mcbeet/beet-bot/commit/435087057cbb2979615159cbf3d54dc2e1f95e94))
+* add infra ([af0e526](https://github.com/mcbeet/beet-bot/commit/af0e52622cd7382c94df1500fb98ba754fffa1d2))
+
 # [0.5.0](https://github.com/mcbeet/beet-bot/compare/v0.4.0...v0.5.0) (2022-05-28)
 
 
