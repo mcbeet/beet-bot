@@ -1,3 +1,10 @@
+# [0.8.0](https://github.com/mcbeet/beet-bot/compare/v0.7.2...v0.8.0) (2022-05-29)
+
+
+### Features
+
+* add dynamodb ([2269434](https://github.com/mcbeet/beet-bot/commit/226943473f22451b47a2e92bbea20f23f06289b2))
+
 ## [0.7.2](https://github.com/mcbeet/beet-bot/compare/v0.7.1...v0.7.2) (2022-05-29)
 
 
