@@ -31,27 +31,27 @@ const group = new aws.ec2.SecurityGroup('beet-bot-security', {
 })
 
 // Setup instance role
-const role = new aws.iam.Role('beet-bot-role', {
-  assumeRolePolicy: {
-    Version: '2012-10-17',
-    Statement: [{
-      Action: 'sts:AssumeRole',
-      Effect: 'Allow',
-      Principal: {
-        Service: 'ec2.amazonaws.com'
-      }
-    }]
-  },
-  inlinePolicies: [{
-    policy: JSON.stringify({
+const policy = new aws.iam.RolePolicy('beet-bot-policy', {
+  role: new aws.iam.Role('beet-bot-role', {
+    assumeRolePolicy: {
       Version: '2012-10-17',
       Statement: [{
-        Action: 'ssm:GetParameters',
+        Action: 'sts:AssumeRole',
         Effect: 'Allow',
-        Resource: [clientId.arn, token.arn]
+        Principal: {
+          Service: 'ec2.amazonaws.com'
+        }
       }]
-    })
-  }]
+    }
+  }),
+  policy: {
+    Version: '2012-10-17',
+    Statement: [{
+      Action: 'ssm:GetParameter',
+      Effect: 'Allow',
+      Resource: [clientId.arn, token.arn]
+    }]
+  }
 })
 
 // Load cloud-init config
@@ -63,8 +63,8 @@ const cloudConfig = pulumi.all({
   .apply(({ cloudConfig, clientId, token }) =>
     cloudConfig
       .replace('<AWS_REGION>', awsConfig.require('region'))
-      .replace('<DISCORD_CLIENT_ID>', clientId)
-      .replace('<DISCORD_TOKEN>', token)
+      .replace('<DISCORD_CLIENT_ID>', `ssm:${clientId}`)
+      .replace('<DISCORD_TOKEN>', `ssm:${token}`)
   )
 
 // Create instance for running the bot
@@ -72,7 +72,7 @@ const instance = new aws.ec2.Instance('beet-bot', {
   instanceType: 't2.micro', // Available in the AWS free tier
   ami: 'ami-0022f774911c1d690', // Latest amazon linux AMI
   vpcSecurityGroupIds: [group.id],
-  iamInstanceProfile: new aws.iam.InstanceProfile('beet-bot-profile', { role }),
+  iamInstanceProfile: new aws.iam.InstanceProfile('beet-bot-profile', { role: policy.role }),
   userData: cloudConfig,
   userDataReplaceOnChange: true
 })

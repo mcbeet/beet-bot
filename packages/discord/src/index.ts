@@ -6,8 +6,6 @@ import { createAdapter, DatabaseAdapterConfig } from './adapter'
 import { createDatabase } from './database'
 
 // TODO
-// - restart
-// - ssm parameters
 // - dynamodb
 
 export type BeetBotOptions = {
@@ -19,12 +17,12 @@ export type BeetBotOptions = {
 }
 
 export const runBeetBot = async ({ clientId, token, awsRegion, database, environments }: BeetBotOptions) => {
-  if (clientId.startsWith('/') || token.startsWith('/')) {
+  if (clientId.startsWith('ssm:') || token.startsWith('ssm:')) {
     const { default: aws } = await import('aws-sdk')
     const ssm = new aws.SSM({ region: awsRegion })
 
-    if (clientId.startsWith('/')) {
-      const result = await ssm.getParameter({ Name: clientId }).promise()
+    if (clientId.startsWith('ssm:')) {
+      const result = await ssm.getParameter({ Name: clientId.slice(4) }).promise()
       if (!result.Parameter?.Value) {
         console.log(`ERROR: Failed to retrieve clientId parameter "${clientId}"`)
         process.exit(1)
@@ -32,8 +30,8 @@ export const runBeetBot = async ({ clientId, token, awsRegion, database, environ
       clientId = result.Parameter.Value
     }
 
-    if (token.startsWith('/')) {
-      const result = await ssm.getParameter({ Name: token, WithDecryption: true }).promise()
+    if (token.startsWith('ssm:')) {
+      const result = await ssm.getParameter({ Name: token.slice(4), WithDecryption: true }).promise()
       if (!result.Parameter?.Value) {
         console.log(`ERROR: Failed to retrieve token parameter "${token}"`)
         process.exit(1)

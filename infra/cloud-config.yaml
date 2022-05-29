@@ -1,5 +1,6 @@
 #cloud-config
 
+package_update: true
 packages:
   - git
 
@@ -23,14 +24,14 @@ write_files:
     content: |
       [Unit]
       Description=Beet bot
-      StartLimitIntervalSec=30
-      StartLimitBurst=2
       After=docker.service
 
       [Service]
       User=ec2-user
       ExecStart=/home/ec2-user/run-beet-bot.sh
       Restart=always
+      StartLimitInterval=30
+      StartLimitBurst=2
 
       [Install]
       WantedBy=multi-user.target
