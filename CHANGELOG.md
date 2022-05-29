@@ -1,3 +1,10 @@
+## [0.7.2](https://github.com/mcbeet/beet-bot/compare/v0.7.1...v0.7.2) (2022-05-29)
+
+
+### Bug Fixes
+
+* use ssm prefix when getting credentials in aws ([5504ca4](https://github.com/mcbeet/beet-bot/commit/5504ca484ce7919b6f7a01b9b0bc6fd26d8c3c3e))
+
 ## [0.7.1](https://github.com/mcbeet/beet-bot/compare/v0.7.0...v0.7.1) (2022-05-29)
 
 
