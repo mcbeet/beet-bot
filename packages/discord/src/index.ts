@@ -20,7 +20,7 @@ export type BeetBotOptions = {
 
 export const runBeetBot = async ({ clientId, token, awsRegion, database, environments }: BeetBotOptions) => {
   if (clientId.startsWith('/') || token.startsWith('/')) {
-    const aws = await import('aws-sdk')
+    const { default: aws } = await import('aws-sdk')
     const ssm = new aws.SSM({ region: awsRegion })
 
     if (clientId.startsWith('/')) {

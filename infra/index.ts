@@ -3,6 +3,7 @@ import * as fs from 'fs/promises'
 import * as aws from '@pulumi/aws'
 import * as pulumi from '@pulumi/pulumi'
 
+const awsConfig = new pulumi.Config('aws')
 const config = new pulumi.Config()
 
 // Provide credentials via SSM parameters
@@ -33,14 +34,24 @@ const group = new aws.ec2.SecurityGroup('beet-bot-security', {
 const role = new aws.iam.Role('beet-bot-role', {
   assumeRolePolicy: {
     Version: '2012-10-17',
-    Statement: [
-      {
-        Effect: 'Allow',
-        Action: ['ssm:GetParameters'],
-        Resource: [clientId.arn, token.arn]
+    Statement: [{
+      Action: 'sts:AssumeRole',
+      Effect: 'Allow',
+      Principal: {
+        Service: 'ec2.amazonaws.com'
       }
-    ]
-  }
+    }]
+  },
+  inlinePolicies: [{
+    policy: JSON.stringify({
+      Version: '2012-10-17',
+      Statement: [{
+        Action: 'ssm:GetParameters',
+        Effect: 'Allow',
+        Resource: [clientId.arn, token.arn]
+      }]
+    })
+  }]
 })
 
 // Load cloud-init config
@@ -51,7 +62,7 @@ const cloudConfig = pulumi.all({
 })
   .apply(({ cloudConfig, clientId, token }) =>
     cloudConfig
-      .replace('<AWS_REGION>', config.require('aws:region'))
+      .replace('<AWS_REGION>', awsConfig.require('region'))
       .replace('<DISCORD_CLIENT_ID>', clientId)
       .replace('<DISCORD_TOKEN>', token)
   )

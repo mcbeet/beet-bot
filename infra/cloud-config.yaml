@@ -24,7 +24,7 @@ write_files:
       [Unit]
       Description=Beet bot
       StartLimitIntervalSec=30
-      StartLimitBurst=3
+      StartLimitBurst=2
       After=docker.service
 
       [Service]
