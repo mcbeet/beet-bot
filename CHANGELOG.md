@@ -1,3 +1,10 @@
+## [0.7.1](https://github.com/mcbeet/beet-bot/compare/v0.7.0...v0.7.1) (2022-05-29)
+
+
+### Bug Fixes
+
+* ec2 role and aws sdk import ([5173d4c](https://github.com/mcbeet/beet-bot/commit/5173d4c5df0b78dbb63ba873e28e14f8b01f78c5))
+
 # [0.7.0](https://github.com/mcbeet/beet-bot/compare/v0.6.0...v0.7.0) (2022-05-29)
 
 
