@@ -19,6 +19,16 @@ const token = new aws.ssm.Parameter('beet-bot-token', {
   value: config.require('token')
 })
 
+// Persist state using DynamoDB
+const table = new aws.dynamodb.Table('beet-bot-table', {
+  readCapacity: 20,
+  writeCapacity: 20,
+  hashKey: 'Id',
+  attributes: [
+    { name: 'Id', type: 'S' }
+  ]
+})
+
 // Allow SSH and HTTP
 const group = new aws.ec2.SecurityGroup('beet-bot-security', {
   ingress: [
@@ -46,25 +56,38 @@ const policy = new aws.iam.RolePolicy('beet-bot-policy', {
   }),
   policy: {
     Version: '2012-10-17',
-    Statement: [{
-      Action: 'ssm:GetParameter',
-      Effect: 'Allow',
-      Resource: [clientId.arn, token.arn]
-    }]
+    Statement: [
+      {
+        Action: 'ssm:GetParameter',
+        Effect: 'Allow',
+        Resource: [clientId.arn, token.arn]
+      },
+      {
+        Action: [
+          'dynamodb:GetItem',
+          'dynamodb:PutItem',
+          'dynamodb:DeleteItem'
+        ],
+        Effect: 'Allow',
+        Resource: [table.arn]
+      }
+    ]
   }
 })
 
 // Load cloud-init config
 const cloudConfig = pulumi.all({
   cloudConfig: fs.readFile(path.join(__dirname, 'cloud-config.yaml'), { encoding: 'utf-8' }),
+  tableName: table.name,
   clientId: clientId.name,
   token: token.name
 })
-  .apply(({ cloudConfig, clientId, token }) =>
+  .apply(({ cloudConfig, tableName, clientId, token }) =>
     cloudConfig
-      .replace('<AWS_REGION>', awsConfig.require('region'))
-      .replace('<DISCORD_CLIENT_ID>', `ssm:${clientId}`)
-      .replace('<DISCORD_TOKEN>', `ssm:${token}`)
+      .replaceAll('<AWS_REGION>', awsConfig.require('region'))
+      .replaceAll('<DYNAMODB_TABLE>', tableName)
+      .replaceAll('<DISCORD_CLIENT_ID>', `ssm:${clientId}`)
+      .replaceAll('<DISCORD_TOKEN>', `ssm:${token}`)
   )
 
 // Create instance for running the bot

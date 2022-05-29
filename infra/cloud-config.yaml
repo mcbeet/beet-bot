@@ -30,8 +30,8 @@ write_files:
       User=ec2-user
       ExecStart=/home/ec2-user/run-beet-bot.sh
       Restart=always
-      StartLimitInterval=30
-      StartLimitBurst=2
+      StartLimitInterval=60
+      StartLimitBurst=4
 
       [Install]
       WantedBy=multi-user.target
@@ -48,8 +48,9 @@ write_files:
     content: |
       {
         "database": {
-          "type": "json",
-          "path": "/home/ec2-user/db.json"
+          "type": "dynamodb",
+          "table": "<DYNAMODB_TABLE>",
+          "region": "<AWS_REGION>"
         },
         "environments": {
           "default": {
