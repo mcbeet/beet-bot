@@ -1,0 +1,61 @@
+#cloud-config
+
+packages:
+  - git
+
+runcmd:
+  - |
+    amazon-linux-extras install -y docker
+    usermod -a -G docker ec2-user
+    systemctl enable docker
+    systemctl start docker
+
+    curl --silent --location https://rpm.nodesource.com/setup_16.x | bash -
+    yum install nodejs -y
+
+    systemctl enable beet-bot
+    systemctl start beet-bot
+
+    chown -R ec2-user:ec2-user /home/ec2-user
+
+write_files:
+  - path: "/etc/systemd/system/beet-bot.service"
+    content: |
+      [Unit]
+      Description=Beet bot
+      StartLimitIntervalSec=30
+      StartLimitBurst=3
+      After=docker.service
+
+      [Service]
+      User=ec2-user
+      ExecStart=/home/ec2-user/run-beet-bot.sh
+      Restart=always
+
+      [Install]
+      WantedBy=multi-user.target
+
+  - path: "/home/ec2-user/run-beet-bot.sh"
+    permissions: '0o755'
+    content: |
+      #!/bin/bash
+      set -e
+      sudo npm i -g beet-bot
+      beet-bot --clientId=<DISCORD_CLIENT_ID> --token=<DISCORD_TOKEN> --config /home/ec2-user/beet-bot.json
+
+  - path: "/home/ec2-user/beet-bot.json"
+    content: |
+      {
+        "database": {
+          "type": "json",
+          "path": "/home/ec2-user/db.json"
+        },
+        "environments": {
+          "default": {
+            "warmup": 2,
+            "timeout": 3000,
+            "path": "https://github.com/mcbeet/beet-bot.git#main:docker/runner-default",
+            "overrides": ["meta.json_reporter.binary_files = true"]
+          }
+        }
+      }
