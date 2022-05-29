@@ -1,5 +1,5 @@
 config:
   aws:region: us-east-1
-  beet-bot-infra:discordClientId: "968562251416092702"
-  beet-bot-infra:discordToken:
-    secure: AAABACHWSmfTU1HErGpcHMdfs917jbbfBUtlI2aRVu20rA3Lg5s+Hdqyda/FxLSO23ahpr8C2ukXyTHSBCBVUAoQCU9TYfZUY8iz6bXdO6ztOkxOMqqpViT2Zw==
+  beet-bot-infra:client-id: "968562251416092702"
+  beet-bot-infra:token:
+    secure: AAABALQC66gZlEHvKx7fFN9Xgysus7QFWGGeFYkPuWeOB7PGDDjt1q8br4JUrSBVGi9Uh5Urt7eXWmdH3WBj3JGQOTDH8NQhYFqXeDTWNMLtWQNyR4maXAydhw==

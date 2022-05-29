@@ -40,8 +40,8 @@ write_files:
     content: |
       #!/bin/bash
       set -e
-      sudo npm i -g beet-bot
-      beet-bot --clientId=<DISCORD_CLIENT_ID> --token=<DISCORD_TOKEN> --config /home/ec2-user/beet-bot.json
+      sudo npm i -g beet-bot aws-sdk
+      beet-bot --awsRegion=<AWS_REGION> --clientId=<DISCORD_CLIENT_ID> --token=<DISCORD_TOKEN> --config /home/ec2-user/beet-bot.json
 
   - path: "/home/ec2-user/beet-bot.json"
     content: |
