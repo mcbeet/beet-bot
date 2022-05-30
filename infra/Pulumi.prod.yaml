@@ -1,5 +1,5 @@
 config:
   aws:region: us-east-1
-  beet-bot-infra:client-id: "980623819272228955"
+  beet-bot-infra:client-id: "980644229984419932"
   beet-bot-infra:token:
-    secure: AAABAJq+z/3LJohxpdq7+SB1/R6k4IT2bOyxEGYp/S/B1sWwD5QavsbGaYGGzKiig+yFC0m7VIMRmWQcVcjlxXVNWJ+vK0IUCFD0nTsle4QGoiXwgHHsCTmddAXxcJI8UkFl0m+U
+    secure: AAABAExTLYqhpIsMMk2w5Z6Gt9uG8e2GKXeggmPAHfjKjYA5pK2BQ3podJAuggh53XohEovPGiM3Do6uQOCxzPuu9EZ7IJK9N3LVAkcFU3RwTXVoA0ZRprXuQfyGE2bLbIn6yhfM
