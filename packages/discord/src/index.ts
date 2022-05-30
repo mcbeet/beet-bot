@@ -5,9 +5,6 @@ import { handleInteractions } from './handle'
 import { createAdapter, DatabaseAdapterConfig } from './adapter'
 import { createDatabase } from './database'
 
-// TODO
-// - dynamodb
-
 export type BeetBotOptions = {
   clientId: string
   token: string

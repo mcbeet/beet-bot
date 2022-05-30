@@ -153,7 +153,7 @@ export const handleInteractions = ({ clientId, discordClient, discordApi, db, en
         }
       } else if (interaction.commandName === 'bbstop') {
         await interaction.reply({
-          embeds: [new MessageEmbed().setDescription('Shutting down the bot').setColor('#FFCC00')]
+          embeds: [new MessageEmbed().setDescription('I don\'t feel so good...').setColor('#FFCC00')]
         })
         await discordClient.destroy()
         process.exit()
