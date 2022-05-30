@@ -1,0 +1,34 @@
+name: Destroy
+
+on:
+  workflow_dispatch:
+
+jobs:
+  infra:
+    name: Delete resources
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v2
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: pnpm
+      - name: Configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-region: us-east-1
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - uses: pulumi/actions@v3
+        with:
+          command: destroy
+          stack-name: prod
+          work-dir: infra
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
