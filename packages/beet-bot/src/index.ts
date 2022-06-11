@@ -7,7 +7,7 @@ import { runBeetBot } from '@beet-bot/discord'
 const main = async () => {
   dotenv.config()
   const { clientId, token, config, awsRegion } = mri(process.argv.slice(2), {
-    string: ['clientId', 'token', 'config'],
+    string: ['clientId', 'token', 'config', 'awsRegion'],
     default: {
       clientId: process.env.BEET_BOT_CLIENT_ID,
       token: process.env.BEET_BOT_TOKEN,
