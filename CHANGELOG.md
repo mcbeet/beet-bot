@@ -1,3 +1,16 @@
+# [0.9.0](https://github.com/mcbeet/beet-bot/compare/v0.8.1...v0.9.0) (2022-06-11)
+
+
+### Bug Fixes
+
+* missing type for awsRegion argument ([cde7e01](https://github.com/mcbeet/beet-bot/commit/cde7e0175fb5399d44d6cc9017824da3739c55f4))
+* return info from invokeBuild ([ce0fb31](https://github.com/mcbeet/beet-bot/commit/ce0fb31e303c3ce0d0c06e7393c46fb94f73e44e))
+
+
+### Features
+
+* add /bbinfo to show version, uptime and environments ([5f25dba](https://github.com/mcbeet/beet-bot/commit/5f25dbac83fcec080829a1b9a34ac27e0d042d34))
+
 ## [0.8.1](https://github.com/mcbeet/beet-bot/compare/v0.8.0...v0.8.1) (2022-05-30)
 
 
