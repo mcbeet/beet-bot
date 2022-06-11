@@ -2,7 +2,6 @@ import { Routes } from 'discord-api-types/v10'
 import { CacheType, Client, MessageEmbed, SelectMenuInteraction } from 'discord.js'
 import { REST } from '@discordjs/rest'
 import { PoolRunner } from '@beet-bot/runner'
-import { version } from '../package.json'
 import { Database } from './database'
 import { generateGuildCommands } from './commands'
 import { ActionDashboardOptions, createActionChoice, createActionDashboard, createEditActionModal } from './widgets'
@@ -17,6 +16,8 @@ export type BeetBotContext = {
   environments: string[]
   runner: PoolRunner
 }
+
+const { version } = require('../package.json')
 
 export const handleInteractions = ({ clientId, discordClient, discordApi, db, environments, runner }: BeetBotContext) => {
   const updateGuildCommands = async (guildId: string) => {
