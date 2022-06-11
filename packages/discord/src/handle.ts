@@ -2,6 +2,7 @@ import { Routes } from 'discord-api-types/v10'
 import { CacheType, Client, MessageEmbed, SelectMenuInteraction } from 'discord.js'
 import { REST } from '@discordjs/rest'
 import { PoolRunner } from '@beet-bot/runner'
+import { version } from '../package.json'
 import { Database } from './database'
 import { generateGuildCommands } from './commands'
 import { ActionDashboardOptions, createActionChoice, createActionDashboard, createEditActionModal } from './widgets'
@@ -118,7 +119,22 @@ export const handleInteractions = ({ clientId, discordClient, discordApi, db, en
 
   discordClient.on('interactionCreate', async (interaction) => {
     if (interaction.inGuild() && interaction.isCommand()) {
-      if (interaction.commandName === 'bbaction') {
+      if (interaction.commandName === 'bbinfo') {
+        let info = 'beet-bot v' + version + '\nuptime: '
+        let uptime = process.uptime()
+
+        for (const [unit, resolution] of [['second', 60], ['minute', 60], ['hour', 24], ['day', Infinity]] as const) {
+          if (uptime < resolution) {
+            info += new Intl.RelativeTimeFormat('en', { numeric: 'auto' }).format(-Math.floor(uptime), unit)
+            break
+          } else {
+            uptime /= resolution
+          }
+        }
+
+        info += '\nenvironments: ' + environments.join(', ') + '\n'
+        await interaction.reply('```' + info + '```')
+      } else if (interaction.commandName === 'bbaction') {
         const guildInfo = await db.getGuildInfo(interaction.guildId)
         const currentActions = Object.keys(guildInfo.actions)
         const actionId = interaction.options.getString('action')
