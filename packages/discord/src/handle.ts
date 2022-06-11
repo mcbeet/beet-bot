@@ -105,14 +105,14 @@ export const handleInteractions = ({ clientId, discordClient, discordApi, db, en
         interaction.deferUpdate()
       }, 800)
 
-      await invokeBuild(runner, name, config, message.content, async (info) => {
-        if (deferred) {
-          await interaction.editReply(createReport(info))
-        } else {
-          clearTimeout(tid)
-          await interaction.update(createReport(info))
-        }
-      })
+      const info = await invokeBuild(runner, name, config, message.content)
+
+      if (deferred) {
+        await interaction.editReply(createReport(info))
+      } else {
+        clearTimeout(tid)
+        await interaction.update(createReport(info))
+      }
     }
   })
 
@@ -296,14 +296,14 @@ export const handleInteractions = ({ clientId, discordClient, discordApi, db, en
           interaction.deferReply()
         }, 800)
 
-        await invokeBuild(runner, name, config, interaction.targetMessage.content, async (info) => {
-          if (deferred) {
-            await interaction.editReply(createReport(info))
-          } else {
-            clearTimeout(tid)
-            await interaction.reply(createReport(info))
-          }
-        })
+        const info = await invokeBuild(runner, name, config, interaction.targetMessage.content)
+
+        if (deferred) {
+          await interaction.editReply(createReport(info))
+        } else {
+          clearTimeout(tid)
+          await interaction.reply(createReport(info))
+        }
       }
     }
   })

@@ -1,7 +1,7 @@
 import { PoolRunner } from '@beet-bot/runner'
 import { BuildInfo } from './report'
 
-export const invokeBuild = async (runner: PoolRunner, name: string, config: any, input: string, showReport: (info: BuildInfo) => Promise<void>) => {
+export const invokeBuild = async (runner: PoolRunner, name: string, config: any, input: string): Promise<BuildInfo> => {
   if (!Array.isArray(config.pipeline)) {
     config.pipeline = []
   }
@@ -18,19 +18,14 @@ export const invokeBuild = async (runner: PoolRunner, name: string, config: any,
 
   config.meta.messaging.input = input
 
-  let result
-
   try {
-    result = await runner(name, config)
+    return await runner(name, config)
   } catch (err) {
-    await showReport({
+    return {
       status: 'error',
       error: {
         message: `${err}`
       }
-    })
-    return
+    }
   }
-
-  await showReport(result)
 }
