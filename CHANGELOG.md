@@ -1,3 +1,10 @@
+## [0.9.2](https://github.com/mcbeet/beet-bot/compare/v0.9.1...v0.9.2) (2022-06-12)
+
+
+### Bug Fixes
+
+* go back to regular import but also build before publish ([048e4bb](https://github.com/mcbeet/beet-bot/commit/048e4bbf659ad6521fe2a9cc3faf70f9d0136be5))
+
 ## [0.9.1](https://github.com/mcbeet/beet-bot/compare/v0.9.0...v0.9.1) (2022-06-12)
 
 
