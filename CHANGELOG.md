@@ -1,3 +1,10 @@
+## [0.9.1](https://github.com/mcbeet/beet-bot/compare/v0.9.0...v0.9.1) (2022-06-12)
+
+
+### Bug Fixes
+
+* use require() to get version dynamically ([46c0b7d](https://github.com/mcbeet/beet-bot/commit/46c0b7d218607ee8c9d4a357bfa7606cd3bfc626))
+
 # [0.9.0](https://github.com/mcbeet/beet-bot/compare/v0.8.1...v0.9.0) (2022-06-11)
 
 
