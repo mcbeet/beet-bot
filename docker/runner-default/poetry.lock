@@ -22,7 +22,7 @@ image = ["pillow"]
 
 [[package]]
 name = "bolt"
-version = "0.6.0"
+version = "0.7.0"
 description = "Supercharge Minecraft commands with Python"
 category = "main"
 optional = false
@@ -230,7 +230,7 @@ python-versions = ">=3.7"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "8b2c4c148e8b3c6af1336e893004d82354ac047b579d1f64687f8e1eb2a7d754"
+content-hash = "6c70d619d58945498232fc350df19723d97769d7f149f1f1c9bfcd55d24577bb"
 
 [metadata.files]
 beet = [
@@ -238,8 +238,8 @@ beet = [
     {file = "beet-0.67.0.tar.gz", hash = "sha256:f6796b7a8e8241aabbbf5b7e15403e87645055b4ec952bb9cfc0a5c0ba52d48d"},
 ]
 bolt = [
-    {file = "bolt-0.6.0-py3-none-any.whl", hash = "sha256:d4f5dc1d4578b490652d9cccd4a321966c2775d44d9584dcdbb62f4de4379f3f"},
-    {file = "bolt-0.6.0.tar.gz", hash = "sha256:15a1d6ef3357e66030c0e7957926829dd221465ea8c7ebe090b41f5e64576b24"},
+    {file = "bolt-0.7.0-py3-none-any.whl", hash = "sha256:2a38aac4418540d32bc437f65c91fdeb4673e52cbe9f0e679eec6990b8aa302a"},
+    {file = "bolt-0.7.0.tar.gz", hash = "sha256:b9e90733d58430edc2e3dff978d8e41d7e10f47fe0a43e2424e056ae2c98af2f"},
 ]
 click = [
     {file = "click-8.1.3-py3-none-any.whl", hash = "sha256:bb4d8133cb15a609f44e8213d9b391b0809795062913b383c62be0ee95b1db48"},

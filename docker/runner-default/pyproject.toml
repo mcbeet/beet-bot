@@ -10,7 +10,7 @@ Pillow = "^9.1.1"
 beet = ">=0.67.0"
 lectern = ">=0.21.2"
 mecha = ">=0.52.2"
-bolt = ">=0.6.0"
+bolt = ">=0.7.0"
 
 [tool.poetry.dev-dependencies]
 
