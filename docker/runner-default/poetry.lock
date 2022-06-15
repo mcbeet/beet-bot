@@ -1,6 +1,6 @@
 [[package]]
 name = "beet"
-version = "0.67.0"
+version = "0.67.1"
 description = "The Minecraft pack development kit"
 category = "main"
 optional = false
@@ -230,12 +230,12 @@ python-versions = ">=3.7"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "6c70d619d58945498232fc350df19723d97769d7f149f1f1c9bfcd55d24577bb"
+content-hash = "4b9888d9e793eb50d3c30c9e841aa2ab84002308da8a4897a0f214f174678826"
 
 [metadata.files]
 beet = [
-    {file = "beet-0.67.0-py3-none-any.whl", hash = "sha256:4e44e7278be50ebd8dec697e411ccdc377a24308e21cdb197f071dfbe1e1cde7"},
-    {file = "beet-0.67.0.tar.gz", hash = "sha256:f6796b7a8e8241aabbbf5b7e15403e87645055b4ec952bb9cfc0a5c0ba52d48d"},
+    {file = "beet-0.67.1-py3-none-any.whl", hash = "sha256:1b849bef4133012f3f058ea7a56a2250b4afd9bc2bdf785c7d381bf3b2a7bca3"},
+    {file = "beet-0.67.1.tar.gz", hash = "sha256:cd874be2e4894be467043bebd6477b04ccebb8c52e5d5957db539371dd47c4b2"},
 ]
 bolt = [
     {file = "bolt-0.7.0-py3-none-any.whl", hash = "sha256:2a38aac4418540d32bc437f65c91fdeb4673e52cbe9f0e679eec6990b8aa302a"},
