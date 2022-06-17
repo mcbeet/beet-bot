@@ -1,3 +1,10 @@
+## [0.9.4](https://github.com/mcbeet/beet-bot/compare/v0.9.3...v0.9.4) (2022-06-17)
+
+
+### Bug Fixes
+
+* await deferred ([d85c02d](https://github.com/mcbeet/beet-bot/commit/d85c02dccb300f2e78ec0266d7bbab713412ecf9))
+
 ## [0.9.3](https://github.com/mcbeet/beet-bot/compare/v0.9.2...v0.9.3) (2022-06-17)
 
 
