@@ -1,3 +1,10 @@
+## [0.9.3](https://github.com/mcbeet/beet-bot/compare/v0.9.2...v0.9.3) (2022-06-17)
+
+
+### Bug Fixes
+
+* missing newline ([f84e84f](https://github.com/mcbeet/beet-bot/commit/f84e84fd8c3baa8aa199fbf3e631c5ab53e6bed2))
+
 ## [0.9.2](https://github.com/mcbeet/beet-bot/compare/v0.9.1...v0.9.2) (2022-06-12)
 
 
