@@ -133,7 +133,7 @@ export const handleInteractions = ({ clientId, discordClient, discordApi, db, en
         }
 
         info += '\nenvironments: ' + environments.join(', ') + '\n'
-        await interaction.reply('```' + info + '```')
+        await interaction.reply('```\n' + info + '```')
       } else if (interaction.commandName === 'bbaction') {
         const guildInfo = await db.getGuildInfo(interaction.guildId)
         const currentActions = Object.keys(guildInfo.actions)
