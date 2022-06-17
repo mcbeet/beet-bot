@@ -100,15 +100,15 @@ export const handleInteractions = ({ clientId, discordClient, discordApi, db, en
       const actionId = interaction.values[0]
       const { runner: name, config } = guildInfo.actions[actionId]
 
-      let deferred = false
+      let deferred: Promise<void> | undefined
       const tid = setTimeout(() => {
-        deferred = true
-        interaction.deferUpdate()
+        deferred = interaction.deferUpdate()
       }, 800)
 
       const info = await invokeBuild(runner, name, config, message.content)
 
       if (deferred) {
+        await deferred
         await interaction.editReply(createReport(info))
       } else {
         clearTimeout(tid)
@@ -306,15 +306,15 @@ export const handleInteractions = ({ clientId, discordClient, discordApi, db, en
       if (actionMatch.length > 0) {
         const { runner: name, config } = actionMatch[0]
 
-        let deferred = false
+        let deferred: Promise<void> | undefined
         const tid = setTimeout(() => {
-          deferred = true
-          interaction.deferReply()
+          deferred = interaction.deferReply()
         }, 800)
 
         const info = await invokeBuild(runner, name, config, interaction.targetMessage.content)
 
         if (deferred) {
+          await deferred
           await interaction.editReply(createReport(info))
         } else {
           clearTimeout(tid)
