@@ -7,10 +7,10 @@ authors = ["Valentin Berlier <berlier.v@gmail.com>"]
 [tool.poetry.dependencies]
 python = "^3.8"
 Pillow = "^9.1.1"
-beet = ">=0.67.1"
-lectern = ">=0.21.2"
-mecha = ">=0.52.2"
-bolt = ">=0.7.2"
+beet = ">=0.68.1"
+lectern = ">=0.22.0"
+mecha = ">=0.54.1"
+bolt = ">=0.8.0"
 
 [tool.poetry.dev-dependencies]
 
