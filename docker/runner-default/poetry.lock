@@ -22,14 +22,14 @@ image = ["pillow"]
 
 [[package]]
 name = "bolt"
-version = "0.12.0"
+version = "0.12.2"
 description = "Supercharge Minecraft commands with Python"
 category = "main"
 optional = false
 python-versions = ">=3.8,<4.0"
 
 [package.dependencies]
-beet = ">=0.68.2"
+beet = ">=0.68.3"
 mecha = ">=0.54.5"
 
 [[package]]
@@ -230,7 +230,7 @@ python-versions = ">=3.7"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "a2d01f22a46ebb5b57c270d5abae9196e2ef1609b45adc531beb7d36906c0b73"
+content-hash = "fdd32b2ff1d10d47a3404180b0cfd9b351d6b34564ca263632cfb00f36c4fec1"
 
 [metadata.files]
 beet = []
