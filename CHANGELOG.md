@@ -1,3 +1,10 @@
+# [0.10.0](https://github.com/mcbeet/beet-bot/compare/v0.9.4...v0.10.0) (2022-08-18)
+
+
+### Features
+
+* add `bolt-expressions` ([#9](https://github.com/mcbeet/beet-bot/issues/9)) ([b36990f](https://github.com/mcbeet/beet-bot/commit/b36990fcd09bae470ade4662940148cc43e5a1db))
+
 ## [0.9.4](https://github.com/mcbeet/beet-bot/compare/v0.9.3...v0.9.4) (2022-06-17)
 
 
