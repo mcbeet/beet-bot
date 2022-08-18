@@ -11,6 +11,7 @@ beet = ">=0.69.0"
 lectern = ">=0.24.0"
 mecha = ">=0.54.9"
 bolt = ">=0.17.5"
+bolt-expressions = ">=0.8.0"
 
 [tool.poetry.dev-dependencies]
 
