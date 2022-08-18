@@ -1,3 +1,10 @@
+# [0.11.0](https://github.com/mcbeet/beet-bot/compare/v0.10.0...v0.11.0) (2022-08-18)
+
+
+### Features
+
+* prepare vanilla resources when bootstrapping environment ([0a87cd3](https://github.com/mcbeet/beet-bot/commit/0a87cd3e57b95344b39108a5b0ec735904c838ab))
+
 # [0.10.0](https://github.com/mcbeet/beet-bot/compare/v0.9.4...v0.10.0) (2022-08-18)
 
 
