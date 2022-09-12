@@ -1,3 +1,10 @@
+# [0.12.0](https://github.com/mcbeet/beet-bot/compare/v0.11.0...v0.12.0) (2022-09-12)
+
+
+### Features
+
+* add /bbrefresh ([a5bfc5d](https://github.com/mcbeet/beet-bot/commit/a5bfc5d2e87a14b257792984fa22de0a2803e637))
+
 # [0.11.0](https://github.com/mcbeet/beet-bot/compare/v0.10.0...v0.11.0) (2022-08-18)
 
 
