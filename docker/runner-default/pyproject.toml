@@ -12,6 +12,7 @@ lectern = "*"
 mecha = "*"
 bolt = "*"
 bolt-expressions = "*"
+minecraft-text-components = "*"
 
 [tool.poetry.dev-dependencies]
 
