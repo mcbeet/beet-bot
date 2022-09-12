@@ -6,9 +6,7 @@ RUN useradd --create-home beet-bot
 WORKDIR /home/beet-bot
 USER beet-bot
 
-COPY pyproject.toml poetry.lock poetry.toml ./
-RUN poetry install --no-root --no-dev
-
+COPY pyproject.toml poetry.toml ./
 COPY runner_default ./runner_default
 RUN poetry install
 

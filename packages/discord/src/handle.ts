@@ -1,5 +1,5 @@
 import { Routes } from 'discord-api-types/v10'
-import { CacheType, Client, MessageEmbed, SelectMenuInteraction } from 'discord.js'
+import { CacheType, Client, SelectMenuInteraction } from 'discord.js'
 import { REST } from '@discordjs/rest'
 import { PoolRunner } from '@beet-bot/runner'
 import { version } from '../package.json'
@@ -132,8 +132,21 @@ export const handleInteractions = ({ clientId, discordClient, discordApi, db, en
           }
         }
 
-        info += '\nenvironments: ' + environments.join(', ') + '\n'
-        await interaction.reply('```\n' + info + '```')
+        info += '\nenvironments: ' + environments.join(', ')
+        await interaction.reply('```\n' + info + '\n```')
+      } else if (interaction.commandName === 'bbrefresh') {
+        const name = interaction.options.getString('environment')
+        if (name) {
+          await interaction.deferReply()
+          try {
+            await runner.refresh(name)
+            await interaction.editReply('```\nSuccessfully refreshed "' + name + '" environment\n```')
+          } catch (err) {
+            await interaction.editReply('```\n' + err + '\n```')
+          }
+        } else {
+          await interaction.reply('```\nSpecify an environment name\n```')
+        }
       } else if (interaction.commandName === 'bbaction') {
         const guildInfo = await db.getGuildInfo(interaction.guildId)
         const currentActions = Object.keys(guildInfo.actions)
@@ -168,10 +181,8 @@ export const handleInteractions = ({ clientId, discordClient, discordApi, db, en
           }))
         }
       } else if (interaction.commandName === 'bbstop') {
-        await interaction.reply({
-          embeds: [new MessageEmbed().setDescription('I don\'t feel so good...').setColor('#FFCC00')]
-        })
-        await discordClient.destroy()
+        await interaction.reply('```\nShutting down...\n```')
+        discordClient.destroy()
         process.exit()
       }
     }

@@ -1,21 +1,24 @@
 import type { ChildProcess } from 'child_process'
 
-export type Builder = (options: any) => Promise<any>
+export type Builder = {
+  refresh(): Promise<void>
+  build(options: any): Promise<any>
+}
 
 export type WorkerInfo = {
   handle: ChildProcess
-  stop(): void
+  stop(): Promise<void>
 }
 
 export type BuilderOptions = {
   warmup: number
   timeout: number
-  setup: () => Promise<(id: number) => Promise<WorkerInfo>>
+  setup: (refresh: boolean) => Promise<(id: number) => Promise<WorkerInfo>>
 }
 
-export const createBuilder = ({ warmup, timeout, setup }: BuilderOptions) => {
+export const createBuilder = ({ warmup, timeout, setup }: BuilderOptions): Builder => {
   let count = 0
-  const sentinel = setup()
+  let sentinel = setup(false)
 
   const createWorker = async () => {
     const spawn = await sentinel
@@ -34,9 +37,30 @@ export const createBuilder = ({ warmup, timeout, setup }: BuilderOptions) => {
     })
   }
 
-  const idle = Array.from({ length: warmup }, createWorker)
+  let idle = Array.from({ length: warmup }, createWorker)
 
-  return async (options: any) => {
+  let refreshing = false
+  const refresh = async () => {
+    if (refreshing) {
+      throw new Error('Already refreshing')
+    }
+    console.log('INFO: Begin environment refresh')
+    refreshing = true
+
+    await Promise.all(idle.map(worker => worker.then(({ stop }) => stop())))
+    sentinel = setup(true)
+    await sentinel
+    idle = Array.from({ length: warmup }, createWorker)
+
+    console.log('INFO: Successfully refreshed environment')
+    refreshing = false
+  }
+
+  const build = async (options: any) => {
+    if (refreshing) {
+      throw new Error('Refreshing environment')
+    }
+
     const worker = idle.shift() ?? createWorker()
     idle.push(createWorker())
 
@@ -111,4 +135,6 @@ export const createBuilder = ({ warmup, timeout, setup }: BuilderOptions) => {
       })
     })
   }
+
+  return { refresh, build }
 }

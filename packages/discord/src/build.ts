@@ -19,7 +19,7 @@ export const invokeBuild = async (runner: PoolRunner, name: string, config: any,
   config.meta.messaging.input = input
 
   try {
-    return await runner(name, config)
+    return await runner.build(name, config)
   } catch (err) {
     return {
       status: 'error',

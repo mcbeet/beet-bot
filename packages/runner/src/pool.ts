@@ -1,7 +1,10 @@
 import { Builder, createBuilder } from './build'
-import { setupDockerBuilder } from './docker'
+import { deleteDockerBuilder, setupDockerBuilder } from './docker'
 
-export type PoolRunner = (name: string, options: any) => Promise<any>
+export type PoolRunner = {
+  refresh(name: string): Promise<void>
+  build(name: string, options: any): Promise<any>
+}
 
 export type EnvironmentOptions = {
   warmup: number
@@ -18,17 +21,34 @@ export const createPoolRunner = (environments: Record<string, EnvironmentOptions
     builders.set(name, createBuilder({
       warmup,
       timeout,
-      setup: () => setupDockerBuilder(name, path, overrides)
+      setup: async (refresh: boolean) => {
+        if (refresh) {
+          await deleteDockerBuilder(name)
+        }
+        return await setupDockerBuilder(name, path, overrides)
+      }
     }))
   }
 
-  return async (name, options) => {
-    const build = builders.get(name)
+  const refresh = async (name: string) => {
+    const builder = builders.get(name)
 
-    if (build) {
-      return await build(options)
+    if (builder) {
+      return await builder.refresh()
     } else {
       throw new Error(`Invalid environment "${name}"`)
     }
   }
+
+  const build = async (name: string, options: any) => {
+    const builder = builders.get(name)
+
+    if (builder) {
+      return await builder.build(options)
+    } else {
+      throw new Error(`Invalid environment "${name}"`)
+    }
+  }
+
+  return { refresh, build }
 }

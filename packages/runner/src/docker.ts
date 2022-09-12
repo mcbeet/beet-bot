@@ -1,7 +1,21 @@
 import { execa } from 'execa'
 
+export const getDockerImageTag = (name: string) => `beet-bot-${name}`
+
+export const deleteDockerBuilder = async (name: string) => {
+  const tag = getDockerImageTag(name)
+
+  try {
+    console.log(`INFO: Deleting "${name}" environment`)
+    await execa('docker', ['rmi', '--force', tag], { stdio: 'inherit' })
+    console.log(`INFO: Deleted "${name}" environment`)
+  } catch {
+    console.log(`WARN: Error deleting "${name}" environment`)
+  }
+}
+
 export const setupDockerBuilder = async (name: string, path: string, overrides: string[] = []) => {
-  const tag = `beet-bot-${name}`
+  const tag = getDockerImageTag(name)
 
   try {
     console.log(`INFO: Start building "${name}" environment`)
