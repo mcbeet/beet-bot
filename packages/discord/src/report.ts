@@ -104,8 +104,8 @@ export const createReport = ({ error, log, stdout, data_pack, resource_pack }: B
   // eslint-disable-next-line prefer-const
   let [shouldZipResourcePack, resourcePackSections, resourcePackImages] = formatPackContents((!forceZip && resource_pack) || {})
 
-  shouldZipDataPack ||= forceZip
-  shouldZipResourcePack ||= forceZip
+  shouldZipDataPack ||= forceZip && !data_pack?.empty
+  shouldZipResourcePack ||= forceZip && !resource_pack?.empty
 
   const joinContent = () => stdoutSection + logSection + errorSection + dataPackSections.join('') + resourcePackSections.join('')
   let content = joinContent()
