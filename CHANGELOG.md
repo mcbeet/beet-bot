@@ -1,3 +1,10 @@
+# [0.13.0](https://github.com/mcbeet/beet-bot/compare/v0.12.0...v0.13.0) (2022-09-19)
+
+
+### Features
+
+* force zip when action id contains "zip" ([74536bd](https://github.com/mcbeet/beet-bot/commit/74536bd753e3d27578e52ac247865d682346801f))
+
 # [0.12.0](https://github.com/mcbeet/beet-bot/compare/v0.11.0...v0.12.0) (2022-09-12)
 
 
