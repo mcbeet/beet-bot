@@ -98,7 +98,7 @@ export const handleInteractions = ({ clientId, discordClient, discordApi, db, en
       }
 
       const actionId = interaction.values[0]
-      const { runner: name, config } = guildInfo.actions[actionId]
+      const { runner: name, config, zip } = guildInfo.actions[actionId]
 
       let deferred: Promise<void> | undefined
       const tid = setTimeout(() => {
@@ -109,10 +109,10 @@ export const handleInteractions = ({ clientId, discordClient, discordApi, db, en
 
       if (deferred) {
         await deferred
-        await interaction.editReply(createReport(info))
+        await interaction.editReply(createReport(info, zip))
       } else {
         clearTimeout(tid)
-        await interaction.update(createReport(info))
+        await interaction.update(createReport(info, zip))
       }
     }
   })
@@ -293,7 +293,8 @@ export const handleInteractions = ({ clientId, discordClient, discordApi, db, en
         guildInfo.actions[newActionId] = {
           title: newActionTitle,
           runner: newActionRunner,
-          config: newActionConfig
+          config: newActionConfig,
+          zip: newActionId.includes('zip')
         }
 
         await db.setGuildInfo(interaction.guildId, guildInfo)
@@ -315,7 +316,7 @@ export const handleInteractions = ({ clientId, discordClient, discordApi, db, en
       const actionMatch = Object.values(guildInfo.actions).filter(action => action.title === interaction.commandName)
 
       if (actionMatch.length > 0) {
-        const { runner: name, config } = actionMatch[0]
+        const { runner: name, config, zip } = actionMatch[0]
 
         let deferred: Promise<void> | undefined
         const tid = setTimeout(() => {
@@ -326,10 +327,10 @@ export const handleInteractions = ({ clientId, discordClient, discordApi, db, en
 
         if (deferred) {
           await deferred
-          await interaction.editReply(createReport(info))
+          await interaction.editReply(createReport(info, zip))
         } else {
           clearTimeout(tid)
-          await interaction.reply(createReport(info))
+          await interaction.reply(createReport(info, zip))
         }
       }
     }

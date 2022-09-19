@@ -5,6 +5,7 @@ export type GuildInfo = {
     title: string
     runner: string
     config: any
+    zip: boolean
   }>
 }
 

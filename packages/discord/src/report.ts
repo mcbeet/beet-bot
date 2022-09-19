@@ -88,7 +88,7 @@ const reduceLargestSection = (sections: string[]) => {
   return sections
 }
 
-export const createReport = ({ error, log, stdout, data_pack, resource_pack }: BuildInfo) => {
+export const createReport = ({ error, log, stdout, data_pack, resource_pack }: BuildInfo, forceZip: boolean = false) => {
   const formattedLog = formatLog(log)
 
   let attachStdout = ''
@@ -100,9 +100,12 @@ export const createReport = ({ error, log, stdout, data_pack, resource_pack }: B
   let errorSection = error ? '```\n' + error.message + (error?.exception ? '\n\n' + error.exception : '') + '\n```' : ''
 
   // eslint-disable-next-line prefer-const
-  let [shouldZipDataPack, dataPackSections, dataPackImages] = formatPackContents(data_pack ?? {})
+  let [shouldZipDataPack, dataPackSections, dataPackImages] = formatPackContents((!forceZip && data_pack) || {})
   // eslint-disable-next-line prefer-const
-  let [shouldZipResourcePack, resourcePackSections, resourcePackImages] = formatPackContents(resource_pack ?? {})
+  let [shouldZipResourcePack, resourcePackSections, resourcePackImages] = formatPackContents((!forceZip && resource_pack) || {})
+
+  shouldZipDataPack ||= forceZip
+  shouldZipResourcePack ||= forceZip
 
   const joinContent = () => stdoutSection + logSection + errorSection + dataPackSections.join('') + resourcePackSections.join('')
   let content = joinContent()
