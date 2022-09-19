@@ -1,3 +1,10 @@
+## [0.13.1](https://github.com/mcbeet/beet-bot/compare/v0.13.0...v0.13.1) (2022-09-19)
+
+
+### Bug Fixes
+
+* only force zip for non-empty packs ([840be86](https://github.com/mcbeet/beet-bot/commit/840be8672cf554089e0123d9727161f6e4afef13))
+
 # [0.13.0](https://github.com/mcbeet/beet-bot/compare/v0.12.0...v0.13.0) (2022-09-19)
 
 
