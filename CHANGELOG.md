@@ -1,3 +1,10 @@
+## [0.13.3](https://github.com/mcbeet/beet-bot/compare/v0.13.2...v0.13.3) (2022-09-20)
+
+
+### Bug Fixes
+
+* emoji name ([3ef2e7b](https://github.com/mcbeet/beet-bot/commit/3ef2e7b06a951dced4ce6643cc93075ab9c29c72))
+
 ## [0.13.2](https://github.com/mcbeet/beet-bot/compare/v0.13.1...v0.13.2) (2022-09-20)
 
 
