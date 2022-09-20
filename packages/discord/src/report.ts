@@ -172,7 +172,7 @@ export const createReport = ({ error, log, stdout, data_pack, resource_pack }: B
   }
 
   if (!content && files.length === 0) {
-    content = '```\nNo output\n```'
+    content = '👍'
   }
 
   return {
