@@ -1,3 +1,10 @@
+## [0.13.4](https://github.com/mcbeet/beet-bot/compare/v0.13.3...v0.13.4) (2022-09-20)
+
+
+### Bug Fixes
+
+* don't show purely whitespace stdout ([863bd7f](https://github.com/mcbeet/beet-bot/commit/863bd7f4ba12922781838c7f4400df71da2e424f))
+
 ## [0.13.3](https://github.com/mcbeet/beet-bot/compare/v0.13.2...v0.13.3) (2022-09-20)
 
 
