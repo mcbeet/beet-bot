@@ -1,3 +1,10 @@
+## [0.13.2](https://github.com/mcbeet/beet-bot/compare/v0.13.1...v0.13.2) (2022-09-20)
+
+
+### Bug Fixes
+
+* change success message with no output ([2bbf3ed](https://github.com/mcbeet/beet-bot/commit/2bbf3edb6275a5e1353163726c18689763c7a0c7))
+
 ## [0.13.1](https://github.com/mcbeet/beet-bot/compare/v0.13.0...v0.13.1) (2022-09-19)
 
 
