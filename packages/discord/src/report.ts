@@ -95,7 +95,7 @@ export const createReport = ({ error, log, stdout, data_pack, resource_pack }: B
   let attachLog = ''
   let attachTraceback = ''
 
-  let stdoutSection = stdout ? '```\n' + stdout + '\n```\n' : ''
+  let stdoutSection = stdout?.trim() ? '```\n' + stdout + '\n```\n' : ''
   let logSection = formattedLog ? '```\n' + formattedLog + '```\n' : ''
   let errorSection = error ? '```\n' + error.message + (error?.exception ? '\n\n' + error.exception : '') + '\n```' : ''
 
