@@ -71,9 +71,19 @@ export const handleInteractions = ({ clientId, discordClient, discordApi, db, en
     await updateGuildCommands(role.guild.id)
   })
 
+  const pingRegex = new RegExp(`<@!?${clientId}>( *[a-zA-Z0-9_]{3,20})?`)
+
   discordClient.on('messageCreate', async (message) => {
     if (!message.author.bot && message.inGuild() && message.mentions.users.has(clientId)) {
       const guildInfo = await db.getGuildInfo(message.guildId)
+
+      let actionId = message.content.match(pingRegex)?.[1]?.trim()
+      if (actionId && guildInfo.actions[actionId]) {
+        const { runner: name, config, zip } = guildInfo.actions[actionId]
+        const info = await invokeBuild(runner, name, config, message.content)
+        await message.reply(createReport(info, zip))
+        return
+      }
 
       const reply = await message.reply(createActionChoice(guildInfo))
 
@@ -97,7 +107,7 @@ export const handleInteractions = ({ clientId, discordClient, discordApi, db, en
         return
       }
 
-      const actionId = interaction.values[0]
+      actionId = interaction.values[0]
       const { runner: name, config, zip } = guildInfo.actions[actionId]
 
       let deferred: Promise<void> | undefined
