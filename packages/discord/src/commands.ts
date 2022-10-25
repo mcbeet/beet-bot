@@ -1,5 +1,4 @@
-import { ContextMenuCommandBuilder, SlashCommandBuilder } from '@discordjs/builders'
-import { ApplicationCommandType } from 'discord-api-types/v10'
+import { ContextMenuCommandBuilder, SlashCommandBuilder, ApplicationCommandType } from 'discord.js'
 import { GuildInfo } from './database'
 
 export const BUILTIN_COMMANDS = [

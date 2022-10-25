@@ -1,4 +1,4 @@
-import { MessageActionRow, MessageButton, MessageEmbed, MessageSelectMenu, Modal, TextInputComponent } from 'discord.js'
+import { ButtonStyle, TextInputStyle, ComponentType } from 'discord.js'
 import { GuildInfo } from './database'
 
 export const createActionChoice = (guildInfo: GuildInfo) => {
@@ -10,23 +10,25 @@ export const createActionChoice = (guildInfo: GuildInfo) => {
 
   return {
     components: [
-      new MessageActionRow({
+      {
+        type: ComponentType.ActionRow,
         components: [
           options.length > 0
-            ? new MessageSelectMenu()
-              .setCustomId('actionChoice.actionId')
-              .setPlaceholder('Select action')
-              .setOptions(options)
-            : new MessageSelectMenu()
-              .setCustomId('actionChoice.actionIdPlaceholder')
-              .setPlaceholder('Use /bbaction my_new_action to create an action')
-              .setDisabled(true)
-              .setOptions({
-                label: 'x',
-                value: 'x'
-              })
+            ? {
+                type: ComponentType.SelectMenu as const,
+                customId: 'actionChoice.actionId',
+                placeholder: 'Select action',
+                options
+              }
+            : {
+                type: ComponentType.SelectMenu as const,
+                customId: 'actionChoice.actionIdPlaceholder',
+                placeholder: 'Use /bbaction my_new_action to create an action',
+                disabled: true,
+                options: [{ label: 'x', value: 'x' }]
+              }
         ]
-      })
+      }
     ]
   }
 }
@@ -50,42 +52,49 @@ export const createActionDashboard = ({ guildInfo, selected, success, error }: A
   return {
     ephemeral: true,
     embeds: success
-      ? [new MessageEmbed().setDescription(success).setColor('#00FF00')]
+      ? [{ description: success, color: 0x00FF00 }]
       : error
-        ? [new MessageEmbed().setDescription(error).setColor('#FF0000')]
+        ? [{ description: error, color: 0xFF0000 }]
         : [],
     components: [
-      new MessageActionRow({
+      {
+        type: ComponentType.ActionRow,
         components: [
           options.length > 0
-            ? new MessageSelectMenu()
-              .setCustomId('actionDashboard.actionId')
-              .setPlaceholder('Select action')
-              .setOptions(options)
-            : new MessageSelectMenu()
-              .setCustomId('actionDashboard.actionIdPlaceholder')
-              .setPlaceholder('Use /bbaction my_new_action to create an action')
-              .setDisabled(true)
-              .setOptions({
-                label: 'x',
-                value: 'x'
-              })
+            ? {
+                type: ComponentType.SelectMenu as const,
+                customId: 'actionDashboard.actionId',
+                placeholder: 'Select action',
+                options
+              }
+            : {
+                type: ComponentType.SelectMenu as const,
+                customId: 'actionDashboard.actionIdPlaceholder',
+                placeholder: 'Use /bbaction my_new_action to create an action',
+                disabled: true,
+                options: [{ label: 'x', value: 'x' }]
+              }
         ]
-      }),
-      new MessageActionRow({
+      },
+      {
+        type: ComponentType.ActionRow,
         components: [
-          new MessageButton()
-            .setCustomId(selected ? `actionDashboard.buttonEditSelected.${selected}` : 'actionDashboard.buttonEdit')
-            .setLabel('Edit')
-            .setStyle('PRIMARY')
-            .setDisabled(!selected),
-          new MessageButton()
-            .setCustomId(selected ? `actionDashboard.buttonDeleteSelected.${selected}` : 'actionDashboard.buttonDelete')
-            .setLabel('Delete')
-            .setStyle('DANGER')
-            .setDisabled(!selected)
+          {
+            type: ComponentType.Button,
+            customId: selected ? `actionDashboard.buttonEditSelected.${selected}` : 'actionDashboard.buttonEdit',
+            label: 'Edit',
+            style: ButtonStyle.Primary as const,
+            disabled: !selected
+          },
+          {
+            type: ComponentType.Button,
+            customId: selected ? `actionDashboard.buttonDeleteSelected.${selected}` : 'actionDashboard.buttonDelete',
+            label: 'Delete',
+            style: ButtonStyle.Danger as const,
+            disabled: !selected
+          }
         ]
-      })
+      }
     ]
   }
 }
@@ -99,57 +108,59 @@ export type EditActionModalOptions = {
 export const createEditActionModal = ({ guildInfo, selected, immediate = false }: EditActionModalOptions) => {
   const action = guildInfo.actions[selected] ?? {}
 
-  const id = new TextInputComponent()
-    .setCustomId('editAction.actionId')
-    .setLabel('Action id')
-    .setPlaceholder('build_message')
-    .setStyle('SHORT')
-    .setMinLength(3)
-    .setMaxLength(20)
-    .setRequired(true)
+  const id = {
+    type: ComponentType.TextInput,
+    customId: 'editAction.actionId',
+    label: 'Action id',
+    placeholder: 'build_message',
+    style: TextInputStyle.Short,
+    minLength: 3,
+    maxLength: 20,
+    required: true,
+    value: selected
+  } as const
 
-  const title = new TextInputComponent()
-    .setCustomId('editAction.actionTitle')
-    .setLabel('Action title')
-    .setPlaceholder('Build message')
-    .setStyle('SHORT')
-    .setMaxLength(40)
-    .setRequired(true)
+  const title = {
+    type: ComponentType.TextInput,
+    customId: 'editAction.actionTitle',
+    label: 'Action title',
+    placeholder: 'Build message',
+    style: TextInputStyle.Short,
+    maxLength: 40,
+    required: true,
+    value: action.title
+  } as const
 
-  const runner = new TextInputComponent()
-    .setCustomId('editAction.actionRunner')
-    .setLabel('Runner environment')
-    .setPlaceholder('default')
-    .setStyle('SHORT')
-    .setMinLength(3)
-    .setMaxLength(20)
-    .setRequired(true)
+  const runner = {
+    type: ComponentType.TextInput,
+    customId: 'editAction.actionRunner',
+    label: 'Runner environment',
+    placeholder: 'default',
+    style: TextInputStyle.Short,
+    minLength: 3,
+    maxLength: 20,
+    required: true,
+    value: action.runner
+  } as const
 
-  const config = new TextInputComponent()
-    .setCustomId('editAction.actionConfig')
-    .setLabel('Json config')
-    .setPlaceholder('{\n  "pipeline": [\n    "mecha"\n  ]\n}')
-    .setStyle('PARAGRAPH')
-    .setRequired(true)
+  const config = {
+    type: ComponentType.TextInput,
+    customId: 'editAction.actionConfig',
+    label: 'Json config',
+    placeholder: '{\n  "pipeline": [\n    "mecha"\n  ]\n}',
+    style: TextInputStyle.Paragraph,
+    required: true,
+    value: JSON.stringify(action.config, undefined, 2)
+  } as const
 
-  id.setValue(selected)
-  if (action.title) {
-    title.setValue(action.title)
+  return {
+    customId: `editAction${immediate ? 'Immediate' : ''}.${selected}`,
+    title: 'Edit action',
+    components: [
+      { type: ComponentType.ActionRow, components: [id] },
+      { type: ComponentType.ActionRow, components: [title] },
+      { type: ComponentType.ActionRow, components: [runner] },
+      { type: ComponentType.ActionRow, components: [config] }
+    ]
   }
-  if (action.runner) {
-    runner.setValue(action.runner)
-  }
-  if (action.config) {
-    config.setValue(JSON.stringify(action.config, undefined, 2))
-  }
-
-  return new Modal()
-    .setCustomId(`editAction${immediate ? 'Immediate' : ''}.${selected}`)
-    .setTitle('Edit action')
-    .setComponents(
-      new MessageActionRow({ components: [id] }),
-      new MessageActionRow({ components: [title] }),
-      new MessageActionRow({ components: [runner] }),
-      new MessageActionRow({ components: [config] })
-    )
 }

@@ -1,6 +1,4 @@
-import { Routes } from 'discord-api-types/v10'
-import { CacheType, Client, SelectMenuInteraction } from 'discord.js'
-import { REST } from '@discordjs/rest'
+import { Client, SelectMenuInteraction, REST, ComponentType, Routes } from 'discord.js'
 import { PoolRunner } from '@beet-bot/runner'
 import { version } from '../package.json'
 import { Database } from './database'
@@ -80,18 +78,18 @@ export const handleInteractions = ({ clientId, discordClient, discordApi, db, en
       let actionId = message.content.match(pingRegex)?.[1]?.trim()
       if (actionId && guildInfo.actions[actionId]) {
         const { runner: name, config, zip } = guildInfo.actions[actionId]
-        const info = await invokeBuild(runner, name, config, message.content)
+        const info = await invokeBuild(runner, name, config, message)
         await message.reply(createReport(info, zip))
         return
       }
 
       const reply = await message.reply(createActionChoice(guildInfo))
 
-      let interaction: SelectMenuInteraction<CacheType>
+      let interaction: SelectMenuInteraction
 
       try {
         interaction = await reply.awaitMessageComponent({
-          componentType: 'SELECT_MENU',
+          componentType: ComponentType.SelectMenu,
           time: 15000,
           filter: (interaction) => {
             if (interaction.user.id === message.author.id) {
@@ -110,12 +108,12 @@ export const handleInteractions = ({ clientId, discordClient, discordApi, db, en
       actionId = interaction.values[0]
       const { runner: name, config, zip } = guildInfo.actions[actionId]
 
-      let deferred: Promise<void> | undefined
+      let deferred: Promise<any> | undefined
       const tid = setTimeout(() => {
         deferred = interaction.deferUpdate()
       }, 800)
 
-      const info = await invokeBuild(runner, name, config, message.content)
+      const info = await invokeBuild(runner, name, config, message)
 
       if (deferred) {
         await deferred
@@ -321,19 +319,19 @@ export const handleInteractions = ({ clientId, discordClient, discordApi, db, en
       }
     }
 
-    if (interaction.inGuild() && interaction.isMessageContextMenu()) {
+    if (interaction.inGuild() && interaction.isMessageContextMenuCommand()) {
       const guildInfo = await db.getGuildInfo(interaction.guildId)
       const actionMatch = Object.values(guildInfo.actions).filter(action => action.title === interaction.commandName)
 
       if (actionMatch.length > 0) {
         const { runner: name, config, zip } = actionMatch[0]
 
-        let deferred: Promise<void> | undefined
+        let deferred: Promise<any> | undefined
         const tid = setTimeout(() => {
           deferred = interaction.deferReply()
         }, 800)
 
-        const info = await invokeBuild(runner, name, config, interaction.targetMessage.content)
+        const info = await invokeBuild(runner, name, config, interaction.targetMessage)
 
         if (deferred) {
           await deferred

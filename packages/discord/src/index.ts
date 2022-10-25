@@ -1,6 +1,5 @@
 import { createPoolRunner, EnvironmentOptions } from '@beet-bot/runner'
-import { REST } from '@discordjs/rest'
-import { Client, Intents } from 'discord.js'
+import { Client, GatewayIntentBits, REST } from 'discord.js'
 import { handleInteractions } from './handle'
 import { createAdapter, DatabaseAdapterConfig } from './adapter'
 import { createDatabase } from './database'
@@ -37,7 +36,7 @@ export const runBeetBot = async ({ clientId, token, awsRegion, database, environ
     }
   }
 
-  const discordClient = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] })
+  const discordClient = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages] })
   const discordApi = new REST({ version: '10' }).setToken(token)
 
   handleInteractions({
