@@ -1,3 +1,10 @@
+# [0.14.0](https://github.com/mcbeet/beet-bot/compare/v0.13.4...v0.14.0) (2022-10-25)
+
+
+### Features
+
+* ping with action ([00e76e1](https://github.com/mcbeet/beet-bot/commit/00e76e19c33fa06d58b39642600c7719eea49fc8))
+
 ## [0.13.4](https://github.com/mcbeet/beet-bot/compare/v0.13.3...v0.13.4) (2022-09-20)
 
 
