@@ -1,3 +1,10 @@
+# [0.15.0](https://github.com/mcbeet/beet-bot/compare/v0.14.0...v0.15.0) (2022-10-25)
+
+
+### Features
+
+* add zip upload ([b2d63cf](https://github.com/mcbeet/beet-bot/commit/b2d63cfdb4196122c8cbd908530110b2098e64d0))
+
 # [0.14.0](https://github.com/mcbeet/beet-bot/compare/v0.13.4...v0.14.0) (2022-10-25)
 
 
