@@ -105,7 +105,7 @@ export type EditActionModalOptions = {
   immediate?: boolean
 }
 
-export const createEditActionModal = ({ guildInfo, selected, immediate = false }: EditActionModalOptions) => {
+export const createEditActionModal = ({ guildInfo, selected }: EditActionModalOptions) => {
   const action = guildInfo.actions[selected] ?? {}
 
   const id = {
@@ -154,7 +154,7 @@ export const createEditActionModal = ({ guildInfo, selected, immediate = false }
   } as const
 
   return {
-    customId: `editAction${immediate ? 'Immediate' : ''}.${selected}`,
+    customId: `editAction.${selected}`,
     title: 'Edit action',
     components: [
       { type: ComponentType.ActionRow, components: [id] },

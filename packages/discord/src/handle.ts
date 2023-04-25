@@ -1,4 +1,4 @@
-import { Client, SelectMenuInteraction, REST, ComponentType, Routes } from 'discord.js'
+import { Client, StringSelectMenuInteraction, REST, ComponentType, Routes } from 'discord.js'
 import { PoolRunner } from '@beet-bot/runner'
 import { version } from '../package.json'
 import { Database } from './database'
@@ -85,11 +85,11 @@ export const handleInteractions = ({ clientId, discordClient, discordApi, db, en
 
       const reply = await message.reply(createActionChoice(guildInfo))
 
-      let interaction: SelectMenuInteraction
+      let interaction: StringSelectMenuInteraction
 
       try {
         interaction = await reply.awaitMessageComponent({
-          componentType: ComponentType.SelectMenu,
+          componentType: ComponentType.StringSelect,
           time: 15000,
           filter: (interaction) => {
             if (interaction.user.id === message.author.id) {
@@ -143,8 +143,8 @@ export const handleInteractions = ({ clientId, discordClient, discordApi, db, en
         info += '\nenvironments: ' + environments.join(', ')
         await interaction.reply('```\n' + info + '\n```')
       } else if (interaction.commandName === 'bbrefresh') {
-        const name = interaction.options.getString('environment')
-        if (name) {
+        const name = interaction.options.get('environment')?.value
+        if (typeof name === 'string') {
           await interaction.deferReply()
           try {
             await runner.refresh(name)
@@ -158,9 +158,9 @@ export const handleInteractions = ({ clientId, discordClient, discordApi, db, en
       } else if (interaction.commandName === 'bbaction') {
         const guildInfo = await db.getGuildInfo(interaction.guildId)
         const currentActions = Object.keys(guildInfo.actions)
-        const actionId = interaction.options.getString('action')
+        const actionId = interaction.options.get('action')?.value
 
-        if (actionId) {
+        if (typeof actionId === 'string') {
           if (actionId.match(/^(?:menu:)?[a-zA-Z0-9_]{3,20}$/)) {
             if (
               currentActions.includes(actionId) ||
@@ -168,8 +168,7 @@ export const handleInteractions = ({ clientId, discordClient, discordApi, db, en
               currentActions.filter(id => id.startsWith('menu:')).length < 5) {
               await interaction.showModal(createEditActionModal({
                 guildInfo,
-                selected: actionId,
-                immediate: true
+                selected: actionId
               }))
             } else {
               await interaction.reply(createActionDashboard({
@@ -195,7 +194,7 @@ export const handleInteractions = ({ clientId, discordClient, discordApi, db, en
       }
     }
 
-    if (interaction.inGuild() && interaction.isSelectMenu()) {
+    if (interaction.inGuild() && interaction.isStringSelectMenu()) {
       const [scope, name] = interaction.customId.split('.')
 
       if (scope === 'actionDashboard' && name === 'actionId') {
@@ -235,11 +234,11 @@ export const handleInteractions = ({ clientId, discordClient, discordApi, db, en
     if (interaction.inGuild() && interaction.isModalSubmit()) {
       const [scope, name] = interaction.customId.split('.')
 
-      if (scope === 'editAction' || scope === 'editActionImmediate') {
+      if (scope === 'editAction') {
         const updateDashboard = (options: ActionDashboardOptions) =>
-          scope === 'editActionImmediate'
-            ? interaction.reply(createActionDashboard(options))
-            : interaction.update(createActionDashboard(options))
+          interaction.isFromMessage()
+            ? interaction.update(createActionDashboard(options))
+            : interaction.reply(createActionDashboard(options))
 
         const guildInfo = await db.getGuildInfo(interaction.guildId)
 

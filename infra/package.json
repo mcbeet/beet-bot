@@ -1,8 +1,8 @@
 {
   "name": "beet-bot-infra",
   "dependencies": {
-    "@pulumi/aws": "^5.18.0",
-    "@pulumi/awsx": "^0.40.1",
-    "@pulumi/pulumi": "^3.44.1"
+    "@pulumi/aws": "^5.37.0",
+    "@pulumi/awsx": "^1.0.2",
+    "@pulumi/pulumi": "^3.64.0"
   }
 }

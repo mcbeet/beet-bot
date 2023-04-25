@@ -88,7 +88,7 @@ const reduceLargestSection = (sections: string[]) => {
   return sections
 }
 
-export const createReport = ({ error, log, stdout, data_pack, resource_pack }: BuildInfo, forceZip: boolean = false) => {
+export const createReport = ({ error, log, stdout, data_pack, resource_pack }: BuildInfo, forceZip = false) => {
   const formattedLog = formatLog(log)
 
   let attachStdout = ''

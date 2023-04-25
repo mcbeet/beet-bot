@@ -40,9 +40,9 @@
     "build": "unbuild"
   },
   "devDependencies": {
-    "unbuild": "^0.9.4"
+    "unbuild": "^1.2.1"
   },
   "dependencies": {
-    "execa": "^6.1.0"
+    "execa": "^7.1.1"
   }
 }
