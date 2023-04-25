@@ -1,7 +1,7 @@
 {
   "name": "beet-bot-monorepo",
   "private": true,
-  "packageManager": "pnpm@7.0.0",
+  "packageManager": "pnpm@8.0.0",
   "scripts": {
     "dev": "jiti packages/beet-bot/src/index.ts",
     "start": "node packages/beet-bot/dist/index.mjs",
