@@ -1,3 +1,10 @@
+# [0.16.0](https://github.com/mcbeet/beet-bot/compare/v0.15.0...v0.16.0) (2023-04-26)
+
+
+### Features
+
+* update dependencies ([0d7b45c](https://github.com/mcbeet/beet-bot/commit/0d7b45ceab2a2a1981ce55e5dc887a885b4878ab))
+
 # [0.15.0](https://github.com/mcbeet/beet-bot/compare/v0.14.0...v0.15.0) (2022-10-25)
 
 
