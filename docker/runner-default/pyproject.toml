@@ -13,6 +13,7 @@ mecha = "*"
 bolt = "*"
 bolt-expressions = "*"
 minecraft-text-components = "*"
+wicked-expressions = "*"
 
 [tool.poetry.dev-dependencies]
 
