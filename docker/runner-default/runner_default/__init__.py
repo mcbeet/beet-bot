@@ -1,7 +1,10 @@
 from beet import Context
 
-from .plugins import prepare_vanilla_resources
+from .plugins import precompile_ast, prepare_vanilla_resources
 
 
 def bootstrap_environment(ctx: Context):
-    ctx.require(prepare_vanilla_resources)
+    ctx.require(
+        precompile_ast,
+        prepare_vanilla_resources,
+    )
