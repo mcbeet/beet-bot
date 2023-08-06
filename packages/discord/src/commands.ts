@@ -1,4 +1,4 @@
-import { ContextMenuCommandBuilder, SlashCommandBuilder, ApplicationCommandType } from 'discord.js'
+import { ContextMenuCommandBuilder, SlashCommandBuilder, ApplicationCommandType, PermissionFlagsBits } from 'discord.js'
 import { GuildInfo } from './database'
 
 export const BUILTIN_COMMANDS = [
@@ -7,6 +7,7 @@ export const BUILTIN_COMMANDS = [
     .setDescription('Show information about the beet bot'),
   new SlashCommandBuilder()
     .setName('bbaction')
+    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
     .setDescription('Manage beet bot actions')
     .addStringOption(option =>
       option
@@ -15,12 +16,14 @@ export const BUILTIN_COMMANDS = [
     ),
   new SlashCommandBuilder()
     .setName('bbstop')
+    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
     .setDescription('Stop the beet bot')
 ]
 
 export const generateRefreshCommand = (environmentNames: string[]) =>
   new SlashCommandBuilder()
     .setName('bbrefresh')
+    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
     .setDescription('Refresh beet bot environment')
     .addStringOption(option =>
       option
