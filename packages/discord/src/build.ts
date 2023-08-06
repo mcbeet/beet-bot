@@ -2,6 +2,7 @@ import { get } from 'https'
 import { PoolRunner } from '@beet-bot/runner'
 import { Message, Attachment } from 'discord.js'
 import { BuildInfo } from './report'
+import { GuildInfo } from './database'
 
 export const downloadAttachmentAsBase64 = (attachment: Attachment) => {
   return new Promise<string>((resolve, reject) => {
@@ -32,6 +33,21 @@ export const packMessage = async (message: Message) => {
   input += message.content
 
   return input
+}
+
+export const resolveActionOverrides = (config: any, guildInfo: GuildInfo) => {
+  if (Array.isArray(config.overrides)) {
+    config.overrides = config.overrides.map((override: any) => {
+      if (typeof override === 'string' && override.startsWith('!')) {
+        const actionId = override.substring(1)
+        const action = guildInfo.actions[actionId]
+        if (action) {
+          return JSON.stringify(action.config)
+        }
+      }
+      return override
+    })
+  }
 }
 
 export const invokeBuild = async (runner: PoolRunner, name: string, config: any, message: Message): Promise<BuildInfo> => {

@@ -5,7 +5,7 @@ import { Database } from './database'
 import { generateGuildCommands } from './commands'
 import { ActionDashboardOptions, createActionChoice, createActionDashboard, createEditActionModal } from './widgets'
 import { createReport } from './report'
-import { invokeBuild } from './build'
+import { invokeBuild, resolveActionOverrides } from './build'
 
 export type BeetBotContext = {
   clientId: string
@@ -78,6 +78,7 @@ export const handleInteractions = ({ clientId, discordClient, discordApi, db, en
       let actionId = message.content.match(pingRegex)?.[1]?.trim()
       if (actionId && guildInfo.actions[actionId]) {
         const { runner: name, config, zip } = guildInfo.actions[actionId]
+        resolveActionOverrides(config, guildInfo)
         const info = await invokeBuild(runner, name, config, message)
         await message.reply(createReport(info, zip))
         return
@@ -107,6 +108,7 @@ export const handleInteractions = ({ clientId, discordClient, discordApi, db, en
 
       actionId = interaction.values[0]
       const { runner: name, config, zip } = guildInfo.actions[actionId]
+      resolveActionOverrides(config, guildInfo)
 
       let deferred: Promise<any> | undefined
       const tid = setTimeout(() => {
@@ -324,6 +326,7 @@ export const handleInteractions = ({ clientId, discordClient, discordApi, db, en
 
       if (actionMatch.length > 0) {
         const { runner: name, config, zip } = actionMatch[0]
+        resolveActionOverrides(config, guildInfo)
 
         let deferred: Promise<any> | undefined
         const tid = setTimeout(() => {
