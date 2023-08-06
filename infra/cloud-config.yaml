@@ -54,10 +54,12 @@ write_files:
         },
         "environments": {
           "default": {
-            "warmup": 2,
-            "timeout": 3000,
+            "warmup": 3,
+            "timeout": 4000,
             "path": "https://github.com/mcbeet/beet-bot.git#main:docker/runner-default",
-            "overrides": ["meta.json_reporter.binary_files = true"]
+            "overrides": [
+              "meta.json_reporter.binary_files = true"
+            ]
           }
         }
       }
