@@ -47,7 +47,7 @@ importers:
   packages/beet-bot:
     dependencies:
       '@beet-bot/discord':
-        specifier: 0.16.1
+        specifier: 0.17.0
         version: link:../discord
       dotenv:
         specifier: ^16.0.3
@@ -63,7 +63,7 @@ importers:
   packages/discord:
     dependencies:
       '@beet-bot/runner':
-        specifier: 0.16.1
+        specifier: 0.17.0
         version: link:../runner
       discord.js:
         specifier: ^14.9.0

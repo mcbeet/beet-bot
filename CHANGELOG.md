@@ -1,3 +1,15 @@
+# [0.17.0](https://github.com/mcbeet/beet-bot/compare/v0.16.1...v0.17.0) (2023-08-06)
+
+
+### Bug Fixes
+
+* don't do dynamic names for attached zip files ([e1a9f9c](https://github.com/mcbeet/beet-bot/commit/e1a9f9cd8fa98cdd650dcd9b1c75b3fbbd7af7de))
+
+
+### Features
+
+* resolve action overrides ([6246b9b](https://github.com/mcbeet/beet-bot/commit/6246b9b0c8246e6bfa62649b445334ef9c381797))
+
 ## [0.16.1](https://github.com/mcbeet/beet-bot/compare/v0.16.0...v0.16.1) (2023-08-06)
 
 
