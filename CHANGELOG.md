@@ -1,3 +1,10 @@
+## [0.16.1](https://github.com/mcbeet/beet-bot/compare/v0.16.0...v0.16.1) (2023-08-06)
+
+
+### Bug Fixes
+
+* default permission to admin for management commands ([e63ae81](https://github.com/mcbeet/beet-bot/commit/e63ae81e0081323f9ed818fca0f270ac10a83a66))
+
 # [0.16.0](https://github.com/mcbeet/beet-bot/compare/v0.15.0...v0.16.0) (2023-04-26)
 
 
