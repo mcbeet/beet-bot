@@ -1,3 +1,10 @@
+## [0.17.1](https://github.com/mcbeet/beet-bot/compare/v0.17.0...v0.17.1) (2023-08-06)
+
+
+### Bug Fixes
+
+* recursively resolve action overrides ([4bde843](https://github.com/mcbeet/beet-bot/commit/4bde843a74ade83c0106ffd6776089426de15e1a))
+
 # [0.17.0](https://github.com/mcbeet/beet-bot/compare/v0.16.1...v0.17.0) (2023-08-06)
 
 
