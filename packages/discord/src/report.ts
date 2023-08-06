@@ -164,11 +164,11 @@ export const createReport = ({ error, log, stdout, data_pack, resource_pack }: B
   }
 
   if (shouldZipDataPack && data_pack?.zip) {
-    files.push({ attachment: Buffer.from(data_pack?.zip, 'base64'), name: (data_pack?.name ?? 'data_pack') + '.zip' })
+    files.push({ attachment: Buffer.from(data_pack.zip, 'base64'), name: 'data_pack.zip' })
   }
 
   if (shouldZipResourcePack && resource_pack?.zip) {
-    files.push({ attachment: Buffer.from(resource_pack?.zip, 'base64'), name: (resource_pack?.name ?? 'resource_pack') + '.zip' })
+    files.push({ attachment: Buffer.from(resource_pack.zip, 'base64'), name: 'resource_pack.zip' })
   }
 
   if (!content && files.length === 0) {
