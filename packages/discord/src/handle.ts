@@ -78,8 +78,8 @@ export const handleInteractions = ({ clientId, discordClient, discordApi, db, en
       let actionId = message.content.match(pingRegex)?.[1]?.trim()
       if (actionId && guildInfo.actions[actionId]) {
         const { runner: name, config, zip } = guildInfo.actions[actionId]
-        resolveActionOverrides(config, guildInfo)
-        const info = await invokeBuild(runner, name, config, message)
+        const resolvedConfig = resolveActionOverrides(config, guildInfo)
+        const info = await invokeBuild(runner, name, resolvedConfig, message)
         await message.reply(createReport(info, zip))
         return
       }
@@ -108,14 +108,14 @@ export const handleInteractions = ({ clientId, discordClient, discordApi, db, en
 
       actionId = interaction.values[0]
       const { runner: name, config, zip } = guildInfo.actions[actionId]
-      resolveActionOverrides(config, guildInfo)
+      const resolvedConfig = resolveActionOverrides(config, guildInfo)
 
       let deferred: Promise<any> | undefined
       const tid = setTimeout(() => {
         deferred = interaction.deferUpdate()
       }, 800)
 
-      const info = await invokeBuild(runner, name, config, message)
+      const info = await invokeBuild(runner, name, resolvedConfig, message)
 
       if (deferred) {
         await deferred
@@ -326,14 +326,14 @@ export const handleInteractions = ({ clientId, discordClient, discordApi, db, en
 
       if (actionMatch.length > 0) {
         const { runner: name, config, zip } = actionMatch[0]
-        resolveActionOverrides(config, guildInfo)
+        const resolvedConfig = resolveActionOverrides(config, guildInfo)
 
         let deferred: Promise<any> | undefined
         const tid = setTimeout(() => {
           deferred = interaction.deferReply()
         }, 800)
 
-        const info = await invokeBuild(runner, name, config, interaction.targetMessage)
+        const info = await invokeBuild(runner, name, resolvedConfig, interaction.targetMessage)
 
         if (deferred) {
           await deferred

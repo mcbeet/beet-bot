@@ -35,19 +35,23 @@ export const packMessage = async (message: Message) => {
   return input
 }
 
-export const resolveActionOverrides = (config: any, guildInfo: GuildInfo) => {
+export const resolveActionOverrides = (config: any, guildInfo: GuildInfo) : any => {
   if (Array.isArray(config.overrides)) {
-    config.overrides = config.overrides.map((override: any) => {
-      if (typeof override === 'string' && override.startsWith('!')) {
-        const actionId = override.substring(1)
-        const action = guildInfo.actions[actionId]
-        if (action) {
-          return JSON.stringify(action.config)
+    return {
+      ...config,
+      overrides: config.overrides.map((override: any) => {
+        if (typeof override === 'string' && override.startsWith('!')) {
+          const actionId = override.substring(1)
+          const action = guildInfo.actions[actionId]
+          if (action) {
+            return JSON.stringify(resolveActionOverrides(action.config, guildInfo))
+          }
         }
-      }
-      return override
-    })
+        return override
+      })
+    }
   }
+  return config
 }
 
 export const invokeBuild = async (runner: PoolRunner, name: string, config: any, message: Message): Promise<BuildInfo> => {
