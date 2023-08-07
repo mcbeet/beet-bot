@@ -1,3 +1,10 @@
+# [0.18.0](https://github.com/mcbeet/beet-bot/compare/v0.17.1...v0.18.0) (2023-08-07)
+
+
+### Features
+
+* add bbhelp ([8acfcae](https://github.com/mcbeet/beet-bot/commit/8acfcaea5d7217b9754cdccf765d87bc5e6142c8))
+
 ## [0.17.1](https://github.com/mcbeet/beet-bot/compare/v0.17.0...v0.17.1) (2023-08-06)
 
 
