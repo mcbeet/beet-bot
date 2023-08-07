@@ -1,6 +1,11 @@
 import { ContextMenuCommandBuilder, SlashCommandBuilder, ApplicationCommandType, PermissionFlagsBits } from 'discord.js'
 import { GuildInfo } from './database'
 
+export const HELP_COMMAND =
+ new SlashCommandBuilder()
+   .setName('bbhelp')
+   .setDescription('Show the beet bot help message')
+
 export const BUILTIN_COMMANDS = [
   new SlashCommandBuilder()
     .setName('bbinfo')
@@ -39,5 +44,6 @@ export const generateGuildCommands = ({ actions }: GuildInfo) => [
       ? [new ContextMenuCommandBuilder().setName(action.title).setType(ApplicationCommandType.Message)]
       : []),
   generateRefreshCommand([...new Set(Object.values(actions).map(({ runner }) => runner))]),
+  ...('help' in actions ? [HELP_COMMAND] : []),
   ...BUILTIN_COMMANDS
 ]

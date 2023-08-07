@@ -15,8 +15,12 @@ export const downloadAttachmentAsBase64 = (attachment: Attachment) => {
   })
 }
 
-export const packMessage = async (message: Message) => {
+export const packMessage = async (message?: Message) => {
   let input = ''
+
+  if (!message) {
+    return input
+  }
 
   for (const attachment of message.attachments.values()) {
     if (attachment.contentType === 'application/zip') {
@@ -54,7 +58,7 @@ export const resolveActionOverrides = (config: any, guildInfo: GuildInfo) : any 
   return config
 }
 
-export const invokeBuild = async (runner: PoolRunner, name: string, config: any, message: Message): Promise<BuildInfo> => {
+export const invokeBuild = async (runner: PoolRunner, name: string, config: any, message?: Message): Promise<BuildInfo> => {
   if (!Array.isArray(config.pipeline)) {
     config.pipeline = []
   }

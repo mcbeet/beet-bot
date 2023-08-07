@@ -129,7 +129,16 @@ export const handleInteractions = ({ clientId, discordClient, discordApi, db, en
 
   discordClient.on('interactionCreate', async (interaction) => {
     if (interaction.inGuild() && interaction.isCommand()) {
-      if (interaction.commandName === 'bbinfo') {
+      if (interaction.commandName === 'bbhelp') {
+        const guildInfo = await db.getGuildInfo(interaction.guildId)
+        if (guildInfo.actions.help) {
+          const { runner: name, config, zip } = guildInfo.actions.help
+          const resolvedConfig = resolveActionOverrides(config, guildInfo)
+          const info = await invokeBuild(runner, name, resolvedConfig)
+          await interaction.reply(createReport(info, zip))
+          return
+        }
+      } else if (interaction.commandName === 'bbinfo') {
         let info = 'beet-bot v' + version + '\nuptime: '
         let uptime = process.uptime()
 
@@ -314,7 +323,7 @@ export const handleInteractions = ({ clientId, discordClient, discordApi, db, en
           success: `Successfully updated action \`${newActionId}\``
         })
 
-        if (actionId.startsWith('menu:') || newActionId.startsWith('menu:')) {
+        if (actionId.startsWith('menu:') || newActionId.startsWith('menu:') || actionId === 'help' || newActionId === 'help') {
           await updateGuildCommands(interaction.guildId)
         }
       }
