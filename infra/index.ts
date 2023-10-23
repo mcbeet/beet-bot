@@ -30,10 +30,10 @@ const table = new aws.dynamodb.Table('beet-bot-table', {
 })
 
 // Networking
-const vpc = new aws.ec2.Vpc('beet-bot-vpc', { cidrBlock: '10.0.0.0/8' })
+const vpc = new aws.ec2.Vpc('beet-bot-vpc', { cidrBlock: '10.0.0.0/16' })
 const subnet = new aws.ec2.Subnet('beet-bot-subnet', {
   vpcId: vpc.id,
-  cidrBlock: '10.0.0.0/8'
+  cidrBlock: '10.0.0.0/24'
 })
 
 const igw = new aws.ec2.InternetGateway('beet-bot-igw', { vpcId: vpc.id })
