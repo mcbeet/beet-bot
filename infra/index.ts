@@ -29,6 +29,29 @@ const table = new aws.dynamodb.Table('beet-bot-table', {
   ]
 })
 
+// Networking
+const vpc = new aws.ec2.Vpc('beet-bot-vpc', { cidrBlock: '10.0.0.0/8' })
+const subnet = new aws.ec2.Subnet('beet-bot-subnet', {
+  vpcId: vpc.id,
+  cidrBlock: '10.0.0.0/8'
+})
+
+const igw = new aws.ec2.InternetGateway('beet-bot-igw', { vpcId: vpc.id })
+const rt = new aws.ec2.RouteTable('beet-bot-rt', {
+  vpcId: vpc.id,
+  routes: [
+    {
+      cidrBlock: '0.0.0.0/0',
+      gatewayId: igw.id
+    }
+  ]
+})
+
+const rta = new aws.ec2.RouteTableAssociation('beet-bot-rta', {
+  routeTableId: rt.id,
+  subnetId: subnet.id
+})
+
 // Allow SSH and HTTP
 const group = new aws.ec2.SecurityGroup('beet-bot-security', {
   ingress: [
@@ -94,6 +117,7 @@ const cloudConfig = pulumi.all({
 const instance = new aws.ec2.Instance('beet-bot', {
   instanceType: 't2.micro', // Available in the AWS free tier
   ami: 'ami-0022f774911c1d690', // Latest amazon linux AMI
+  subnetId: subnet.id,
   vpcSecurityGroupIds: [group.id],
   iamInstanceProfile: new aws.iam.InstanceProfile('beet-bot-profile', { role: policy.role }),
   userData: cloudConfig,
@@ -101,5 +125,4 @@ const instance = new aws.ec2.Instance('beet-bot', {
 })
 
 export const instanceId = instance.id
-export const publicIp = instance.publicIp
-export const publicHostName = instance.publicDns
+export const rtaId = rta.id
