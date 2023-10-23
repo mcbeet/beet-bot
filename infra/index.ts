@@ -54,6 +54,7 @@ const rta = new aws.ec2.RouteTableAssociation('beet-bot-rta', {
 
 // Allow SSH and HTTP
 const group = new aws.ec2.SecurityGroup('beet-bot-security', {
+  vpcId: vpc.id,
   ingress: [
     { protocol: 'tcp', fromPort: 22, toPort: 22, cidrBlocks: ['0.0.0.0/0'] }
   ],
