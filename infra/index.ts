@@ -37,7 +37,7 @@ const subnet = new aws.ec2.Subnet('beet-bot-subnet', {
 })
 
 const igw = new aws.ec2.InternetGateway('beet-bot-igw', { vpcId: vpc.id })
-const rt = new aws.ec2.RouteTable('beet-bot-rt', {
+const rtb = new aws.ec2.RouteTable('beet-bot-rt', {
   vpcId: vpc.id,
   routes: [
     {
@@ -47,13 +47,13 @@ const rt = new aws.ec2.RouteTable('beet-bot-rt', {
   ]
 })
 
-const rta = new aws.ec2.RouteTableAssociation('beet-bot-rta', {
-  routeTableId: rt.id,
+const rtbAssoc = new aws.ec2.RouteTableAssociation('beet-bot-rta', {
+  routeTableId: rtb.id,
   subnetId: subnet.id
 })
 
-// Allow SSH and HTTP
-const group = new aws.ec2.SecurityGroup('beet-bot-security', {
+// Security group
+const sg = new aws.ec2.SecurityGroup('beet-bot-sg', {
   vpcId: vpc.id,
   ingress: [
     { protocol: 'tcp', fromPort: 22, toPort: 22, cidrBlocks: ['0.0.0.0/0'] }
@@ -119,11 +119,25 @@ const instance = new aws.ec2.Instance('beet-bot', {
   instanceType: 't2.micro', // Available in the AWS free tier
   ami: 'ami-0022f774911c1d690', // Latest amazon linux AMI
   subnetId: subnet.id,
-  vpcSecurityGroupIds: [group.id],
+  vpcSecurityGroupIds: [sg.id],
   iamInstanceProfile: new aws.iam.InstanceProfile('beet-bot-profile', { role: policy.role }),
   userData: cloudConfig,
   userDataReplaceOnChange: true
 })
 
+// EC2 Instance connect endpoint
+const iceSg = new aws.ec2.SecurityGroup('beet-bot-ice-sg', {
+  vpcId: vpc.id,
+  egress: [
+    { protocol: 'tcp', fromPort: 22, toPort: 22, cidrBlocks: ['0.0.0.0/0'] }
+  ]
+})
+
+const ice = new aws.ec2transitgateway.InstanceConnectEndpoint('beet-bot-ice', {
+  subnetId: subnet.id,
+  securityGroupIds: [iceSg.id]
+})
+
 export const instanceId = instance.id
-export const rtaId = rta.id
+export const rtbAssocId = rtbAssoc.id
+export const iceId = ice.id
