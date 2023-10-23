@@ -119,6 +119,7 @@ const instance = new aws.ec2.Instance('beet-bot', {
   instanceType: 't2.micro', // Available in the AWS free tier
   ami: 'ami-0022f774911c1d690', // Latest amazon linux AMI
   subnetId: subnet.id,
+  associatePublicIpAddress: true, // FIXME: amazon will start charging for this
   vpcSecurityGroupIds: [sg.id],
   iamInstanceProfile: new aws.iam.InstanceProfile('beet-bot-profile', { role: policy.role }),
   userData: cloudConfig,
