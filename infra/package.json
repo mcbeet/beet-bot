@@ -1,8 +1,12 @@
 {
   "name": "beet-bot-infra",
+  "scripts": {
+    "lint": "eslint --ignore-path ../.eslintignore --ext .ts ."
+  },
   "dependencies": {
     "@pulumi/aws": "^6.6.0",
     "@pulumi/awsx": "^2.0.2",
-    "@pulumi/pulumi": "^3.90.0"
+    "@pulumi/pulumi": "^3.90.0",
+    "ip-num": "^1.5.1"
   }
 }

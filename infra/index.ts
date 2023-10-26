@@ -2,9 +2,13 @@ import * as path from 'path'
 import * as fs from 'fs/promises'
 import * as aws from '@pulumi/aws'
 import * as pulumi from '@pulumi/pulumi'
+import * as ipNum from 'ip-num'
 
 const awsConfig = new pulumi.Config('aws')
 const config = new pulumi.Config()
+
+const region = awsConfig.require('region')
+const availabilityZone = region + 'b'
 
 // Provide credentials via SSM parameters
 const clientId = new aws.ssm.Parameter('beet-bot-client-id', {
@@ -30,24 +34,44 @@ const table = new aws.dynamodb.Table('beet-bot-table', {
 })
 
 // Networking
-const vpc = new aws.ec2.Vpc('beet-bot-vpc', { cidrBlock: '10.0.0.0/16' })
+const vpc = new aws.ec2.Vpc('beet-bot-vpc', {
+  enableDnsHostnames: true,
+  enableDnsSupport: true,
+  assignGeneratedIpv6CidrBlock: true,
+  cidrBlock: '10.0.0.0/16'
+})
+
+const subnetRanges = vpc.ipv6CidrBlock.apply((ipv6CidrBlock) => {
+  const [ip, prefix] = ipv6CidrBlock.split('/')
+  const block = new ipNum.IPv6CidrRange(new ipNum.IPv6(ip), new ipNum.IPv6Prefix(BigInt(prefix)))
+  return block.splitInto(new ipNum.IPv6Prefix(BigInt(64)))
+})
+
 const subnet = new aws.ec2.Subnet('beet-bot-subnet', {
   vpcId: vpc.id,
-  cidrBlock: '10.0.0.0/24'
+  availabilityZone,
+  enableDns64: true,
+  cidrBlock: '10.0.0.0/24',
+  ipv6CidrBlock: subnetRanges.apply(ranges => ranges[1].toCidrString()),
+  assignIpv6AddressOnCreation: true
 })
 
 const igw = new aws.ec2.InternetGateway('beet-bot-igw', { vpcId: vpc.id })
-const rtb = new aws.ec2.RouteTable('beet-bot-rt', {
+const rtb = new aws.ec2.RouteTable('beet-bot-rtb', {
   vpcId: vpc.id,
   routes: [
     {
       cidrBlock: '0.0.0.0/0',
       gatewayId: igw.id
+    },
+    {
+      ipv6CidrBlock: '::/0',
+      gatewayId: igw.id
     }
   ]
 })
 
-const rtbAssoc = new aws.ec2.RouteTableAssociation('beet-bot-rta', {
+const rtbAssoc = new aws.ec2.RouteTableAssociation('beet-bot-rtb-assoc', {
   routeTableId: rtb.id,
   subnetId: subnet.id
 })
@@ -56,11 +80,14 @@ const rtbAssoc = new aws.ec2.RouteTableAssociation('beet-bot-rta', {
 const sg = new aws.ec2.SecurityGroup('beet-bot-sg', {
   vpcId: vpc.id,
   ingress: [
-    { protocol: 'tcp', fromPort: 22, toPort: 22, cidrBlocks: ['0.0.0.0/0'] }
+    { protocol: 'tcp', fromPort: 22, toPort: 22, cidrBlocks: ['0.0.0.0/0'] },
+    { protocol: 'tcp', fromPort: 22, toPort: 22, ipv6CidrBlocks: ['::/0'] }
   ],
   egress: [
     { protocol: 'tcp', fromPort: 80, toPort: 80, cidrBlocks: ['0.0.0.0/0'] },
-    { protocol: 'tcp', fromPort: 443, toPort: 443, cidrBlocks: ['0.0.0.0/0'] }
+    { protocol: 'tcp', fromPort: 80, toPort: 80, ipv6CidrBlocks: ['::/0'] },
+    { protocol: 'tcp', fromPort: 443, toPort: 443, cidrBlocks: ['0.0.0.0/0'] },
+    { protocol: 'tcp', fromPort: 443, toPort: 443, ipv6CidrBlocks: ['::/0'] }
   ]
 })
 
@@ -108,7 +135,7 @@ const cloudConfig = pulumi.all({
 })
   .apply(({ cloudConfig, tableName, clientId, token }) =>
     cloudConfig
-      .replaceAll('<AWS_REGION>', awsConfig.require('region'))
+      .replaceAll('<AWS_REGION>', region)
       .replaceAll('<DYNAMODB_TABLE>', tableName)
       .replaceAll('<DISCORD_CLIENT_ID>', `ssm:${clientId}`)
       .replaceAll('<DISCORD_TOKEN>', `ssm:${token}`)
@@ -116,21 +143,23 @@ const cloudConfig = pulumi.all({
 
 // Create instance for running the bot
 const instance = new aws.ec2.Instance('beet-bot', {
-  instanceType: 't2.micro', // Available in the AWS free tier
-  ami: 'ami-0022f774911c1d690', // Latest amazon linux AMI
+  instanceType: 't3.micro', // Available in the AWS free tier
+  ami: 'ami-01eccbf80522b562b', // Amazon Linux 2 AMI
+  availabilityZone,
   subnetId: subnet.id,
-  associatePublicIpAddress: true, // FIXME: amazon will start charging for this
+  ipv6AddressCount: 1,
   vpcSecurityGroupIds: [sg.id],
   iamInstanceProfile: new aws.iam.InstanceProfile('beet-bot-profile', { role: policy.role }),
   userData: cloudConfig,
   userDataReplaceOnChange: true
-})
+}, { dependsOn: rtbAssoc })
 
 // EC2 Instance connect endpoint
 const iceSg = new aws.ec2.SecurityGroup('beet-bot-ice-sg', {
   vpcId: vpc.id,
   egress: [
-    { protocol: 'tcp', fromPort: 22, toPort: 22, cidrBlocks: ['0.0.0.0/0'] }
+    { protocol: 'tcp', fromPort: 22, toPort: 22, cidrBlocks: ['0.0.0.0/0'] },
+    { protocol: 'tcp', fromPort: 22, toPort: 22, ipv6CidrBlocks: ['::/0'] }
   ]
 })
 
@@ -139,6 +168,7 @@ const ice = new aws.ec2transitgateway.InstanceConnectEndpoint('beet-bot-ice', {
   securityGroupIds: [iceSg.id]
 })
 
+export const vpcIpv6CidrBlock = vpc.ipv6CidrBlock
+export const subnetIpv6CidrBlock = subnet.ipv6CidrBlock
 export const instanceId = instance.id
-export const rtbAssocId = rtbAssoc.id
 export const iceId = ice.id
