@@ -6,7 +6,6 @@
   "dependencies": {
     "@pulumi/aws": "^6.6.0",
     "@pulumi/awsx": "^2.0.2",
-    "@pulumi/pulumi": "^3.90.0",
-    "ip-num": "^1.5.1"
+    "@pulumi/pulumi": "^3.90.0"
   }
 }

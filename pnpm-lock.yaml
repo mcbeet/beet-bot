@@ -43,9 +43,6 @@ importers:
       '@pulumi/pulumi':
         specifier: ^3.90.0
         version: 3.90.0
-      ip-num:
-        specifier: ^1.5.1
-        version: 1.5.1
 
   packages/beet-bot:
     dependencies:
@@ -4133,10 +4130,6 @@ packages:
       from2: 2.3.0
       p-is-promise: 3.0.0
     dev: true
-
-  /ip-num@1.5.1:
-    resolution: {integrity: sha512-QziFxgxq3mjIf5CuwlzXFYscHxgLqdEdJKRo2UJ5GurL5zrSRMzT/O+nK0ABimoFH8MWF8YwIiwECYsHc1LpUQ==}
-    dev: false
 
   /is-arguments@1.1.1:
     resolution: {integrity: sha512-8Q7EARjzEnKpt/PCD7e1cgUS0a6X8u5tdSiMqXhojOdoV9TsMsiO+9VLC5vAmO8N7/GmXn7yjR8qnA6bVAEzfA==}
