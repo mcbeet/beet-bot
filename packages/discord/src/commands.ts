@@ -20,6 +20,30 @@ export const BUILTIN_COMMANDS = [
         .setDescription('The id of the action')
     ),
   new SlashCommandBuilder()
+    .setName('bbexport')
+    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
+    .setDescription('Export beet bot action database'),
+  new SlashCommandBuilder()
+    .setName('bbimport')
+    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
+    .setDescription('Import beet bot action database')
+    .addAttachmentOption(option =>
+      option
+        .setName('database')
+        .setDescription('The json file describing configured actions')
+        .setRequired(true)
+    ),
+  new SlashCommandBuilder()
+    .setName('bbresolve')
+    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
+    .setDescription('Debug the resolved config of a beet bot action')
+    .addStringOption(option =>
+      option
+        .setName('action')
+        .setDescription('The id of the action')
+        .setRequired(true)
+    ),
+  new SlashCommandBuilder()
     .setName('bbstop')
     .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
     .setDescription('Stop the beet bot')

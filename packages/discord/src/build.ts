@@ -1,19 +1,8 @@
-import { get } from 'https'
 import { PoolRunner } from '@beet-bot/runner'
-import { Message, Attachment } from 'discord.js'
+import { Message } from 'discord.js'
 import { BuildInfo } from './report'
 import { GuildInfo } from './database'
-
-export const downloadAttachmentAsBase64 = (attachment: Attachment) => {
-  return new Promise<string>((resolve, reject) => {
-    get(attachment.url, (res) => {
-      res.setEncoding('base64')
-      let body = `data:${attachment.contentType};base64,`
-      res.on('data', (data) => { body += data })
-      res.on('end', () => resolve(body))
-    }).on('error', err => reject(err))
-  })
-}
+import { downloadAsBase64Url } from './download'
 
 export const packMessage = async (message?: Message) => {
   let input = ''
@@ -26,7 +15,7 @@ export const packMessage = async (message?: Message) => {
     if (attachment.contentType === 'application/zip') {
       try {
         // Download the attachment now because python's urlopen() gets a 403 (user-agent issues)
-        const base64 = await downloadAttachmentAsBase64(attachment)
+        const base64 = await downloadAsBase64Url(attachment.url, attachment.contentType)
         input += '```\n@merge_zip(download)\n' + base64 + '\n```\n'
       } catch (err) {
         console.log(`ERROR: ${err}`)

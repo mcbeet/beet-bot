@@ -6,6 +6,7 @@ import { generateGuildCommands } from './commands'
 import { ActionDashboardOptions, createActionChoice, createActionDashboard, createEditActionModal } from './widgets'
 import { createReport } from './report'
 import { invokeBuild, resolveActionOverrides } from './build'
+import { download } from './download'
 
 export type BeetBotContext = {
   clientId: string
@@ -197,6 +198,59 @@ export const handleInteractions = ({ clientId, discordClient, discordApi, db, en
           await interaction.reply(createActionDashboard({
             guildInfo
           }))
+        }
+      } else if (interaction.commandName === 'bbexport') {
+        const guildInfo = await db.getGuildInfo(interaction.guildId)
+        await interaction.reply({
+          ephemeral: true,
+          files: [{
+            attachment: Buffer.from(JSON.stringify(guildInfo, undefined, 2), 'utf-8'),
+            name: 'actionDatabase.json'
+          }]
+        })
+      } else if (interaction.commandName === 'bbimport') {
+        const attachment = interaction.options.getAttachment('database')
+        if (attachment) {
+          try {
+            const content = await download(attachment.url, 'utf-8')
+            const actionDatabase = JSON.parse(content)
+            const actionCount = Object.keys(actionDatabase.actions).length
+            await db.setGuildInfo(interaction.guildId, actionDatabase)
+            await updateGuildCommands(interaction.guildId)
+            await interaction.reply({
+              ephemeral: true,
+              embeds: [{ description: `Successfully imported ${actionCount} action(s) from attached json`, color: 0x00FF00 }]
+            })
+          } catch (err) {
+            console.log(`ERROR: ${err}`)
+            await interaction.reply({
+              ephemeral: true,
+              embeds: [{ description: 'Failed to import actions from attached json', color: 0xFF0000 }]
+            })
+          }
+        } else {
+          await interaction.reply({
+            ephemeral: true,
+            embeds: [{ description: 'Missing json attachment for action database', color: 0xFF0000 }]
+          })
+        }
+      } else if (interaction.commandName === 'bbresolve') {
+        const guildInfo = await db.getGuildInfo(interaction.guildId)
+        const actionId = interaction.options.get('action')?.value
+        if (typeof actionId === 'string' && guildInfo.actions[actionId]) {
+          const resolvedConfig = resolveActionOverrides(guildInfo.actions[actionId].config, guildInfo)
+          await interaction.reply({
+            ephemeral: true,
+            files: [{
+              attachment: Buffer.from(JSON.stringify(resolvedConfig, undefined, 2), 'utf-8'),
+              name: `${actionId.replace('menu:', '')}.json`
+            }]
+          })
+        } else {
+          await interaction.reply({
+            ephemeral: true,
+            embeds: [{ description: `Could not find action \`${actionId}\``, color: 0xFF0000 }]
+          })
         }
       } else if (interaction.commandName === 'bbstop') {
         await interaction.reply('```\nShutting down...\n```')
