@@ -14,7 +14,7 @@ export const deleteDockerBuilder = async (name: string) => {
   }
 }
 
-export const setupDockerBuilder = async (name: string, path: string, overrides: string[] = []) => {
+export const setupDockerBuilder = async (name: string, path: string, isolated: boolean, overrides: string[] = []) => {
   const tag = getDockerImageTag(name)
 
   try {
@@ -30,7 +30,7 @@ export const setupDockerBuilder = async (name: string, path: string, overrides: 
     const container = `${tag}-${id}`
 
     const handle = execa('docker', [
-      'run', '--name', container, '--rm', '-i', tag,
+      'run', '--name', container, ...(isolated ? ['--network', 'none'] : []), '--rm', '-i', tag,
       'beet', '-p', '@beet/preset_stdin.yml', ...overrides.flatMap(override => ['-s', override]), 'build', '--json'
     ])
 

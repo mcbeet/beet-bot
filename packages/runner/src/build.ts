@@ -26,12 +26,12 @@ export const createBuilder = ({ warmup, timeout, setup }: BuilderOptions): Build
 
     return new Promise<WorkerInfo>((resolve, reject) => {
       handle.on('spawn', () => {
-        console.log(`INFO: Successfully spawned worker #${handle.pid}`)
+        console.log(`INFO: Successfully spawned idle worker #${handle.pid}`)
         resolve({ handle, stop })
       })
 
       handle.on('error', (err) => {
-        console.log('WARN: Failed to spawn worker')
+        console.log('WARN: Failed to spawn idle worker')
         reject(err)
       })
     })

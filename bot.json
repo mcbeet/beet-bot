@@ -5,8 +5,16 @@
   },
   "environments": {
     "default": {
-      "warmup": 4,
-      "timeout": 3000,
+      "warmup": 3,
+      "timeout": 4000,
+      "isolated": false,
+      "path": "docker/runner-default",
+      "overrides": ["meta.json_reporter.binary_files = true"]
+    },
+    "isolated": {
+      "warmup": 2,
+      "timeout": 30000,
+      "isolated": true,
       "path": "docker/runner-default",
       "overrides": ["meta.json_reporter.binary_files = true"]
     }

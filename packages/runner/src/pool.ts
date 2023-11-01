@@ -9,6 +9,7 @@ export type PoolRunner = {
 export type EnvironmentOptions = {
   warmup: number
   timeout: number
+  isolated: boolean
   path: string
   overrides?: string[]
 }
@@ -17,7 +18,7 @@ export const createPoolRunner = (environments: Record<string, EnvironmentOptions
   const builders = new Map<string, Builder>()
 
   for (const name in environments) {
-    const { warmup, timeout, path, overrides } = environments[name]
+    const { warmup, timeout, isolated, path, overrides } = environments[name]
     builders.set(name, createBuilder({
       warmup,
       timeout,
@@ -25,7 +26,7 @@ export const createPoolRunner = (environments: Record<string, EnvironmentOptions
         if (refresh) {
           await deleteDockerBuilder(name)
         }
-        return await setupDockerBuilder(name, path, overrides)
+        return await setupDockerBuilder(name, path, isolated, overrides)
       }
     }))
   }
@@ -44,6 +45,7 @@ export const createPoolRunner = (environments: Record<string, EnvironmentOptions
     const builder = builders.get(name)
 
     if (builder) {
+      console.log(`INFO: Trigger build in "${name}" environment`)
       return await builder.build(options)
     } else {
       throw new Error(`Invalid environment "${name}"`)
