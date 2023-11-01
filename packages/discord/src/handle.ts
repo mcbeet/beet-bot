@@ -3,7 +3,7 @@ import { PoolRunner } from '@beet-bot/runner'
 import { version } from '../package.json'
 import { Database } from './database'
 import { generateGuildCommands } from './commands'
-import { ActionDashboardOptions, createActionChoice, createActionDashboard, createEditActionModal } from './widgets'
+import { ActionDashboardOptions, createActionChoice, createActionChoiceDisabled, createActionDashboard, createEditActionModal } from './widgets'
 import { createReport } from './report'
 import { invokeBuild, resolveActionOverrides } from './build'
 import { download } from './download'
@@ -79,13 +79,14 @@ export const handleInteractions = ({ clientId, discordClient, discordApi, db, en
       let actionId = message.content.match(pingRegex)?.[1]?.trim()
       if (actionId && guildInfo.actions[actionId]) {
         const { runner: name, config, zip } = guildInfo.actions[actionId]
+        message.channel.sendTyping()
         const resolvedConfig = resolveActionOverrides(config, guildInfo)
         const info = await invokeBuild(runner, name, resolvedConfig, message)
         await message.reply(createReport(info, zip))
         return
       }
 
-      const reply = await message.reply(createActionChoice(guildInfo))
+      const reply = await message.reply(createActionChoice(guildInfo, false))
 
       let interaction: StringSelectMenuInteraction
 
@@ -108,23 +109,14 @@ export const handleInteractions = ({ clientId, discordClient, discordApi, db, en
       }
 
       actionId = interaction.values[0]
-      const { runner: name, config, zip } = guildInfo.actions[actionId]
+      const { title, runner: name, config, zip } = guildInfo.actions[actionId]
+
+      await interaction.update(createActionChoiceDisabled(title))
+
       const resolvedConfig = resolveActionOverrides(config, guildInfo)
-
-      let deferred: Promise<any> | undefined
-      const tid = setTimeout(() => {
-        deferred = interaction.deferUpdate()
-      }, 800)
-
       const info = await invokeBuild(runner, name, resolvedConfig, message)
 
-      if (deferred) {
-        await deferred
-        await interaction.editReply(createReport(info, zip))
-      } else {
-        clearTimeout(tid)
-        await interaction.update(createReport(info, zip))
-      }
+      await interaction.editReply(createReport(info, zip))
     }
   })
 
@@ -385,17 +377,19 @@ export const handleInteractions = ({ clientId, discordClient, discordApi, db, en
 
     if (interaction.inGuild() && interaction.isMessageContextMenuCommand()) {
       const guildInfo = await db.getGuildInfo(interaction.guildId)
-      const actionMatch = Object.values(guildInfo.actions).filter(action => action.title === interaction.commandName)
+      const actionMatch = Object.entries(guildInfo.actions)
+        .filter(([actionId, action]) => actionId.startsWith('menu:') && action.title === interaction.commandName)
+        .map(([_, action]) => action)
 
       if (actionMatch.length > 0) {
         const { runner: name, config, zip } = actionMatch[0]
-        const resolvedConfig = resolveActionOverrides(config, guildInfo)
 
         let deferred: Promise<any> | undefined
         const tid = setTimeout(() => {
           deferred = interaction.deferReply()
         }, 800)
 
+        const resolvedConfig = resolveActionOverrides(config, guildInfo)
         const info = await invokeBuild(runner, name, resolvedConfig, interaction.targetMessage)
 
         if (deferred) {

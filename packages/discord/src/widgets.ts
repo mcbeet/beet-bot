@@ -33,6 +33,25 @@ export const createActionChoice = (guildInfo: GuildInfo) => {
   }
 }
 
+export const createActionChoiceDisabled = (message: string) => {
+  return {
+    components: [
+      {
+        type: ComponentType.ActionRow,
+        components: [
+          {
+            type: ComponentType.SelectMenu as const,
+            customId: 'actionChoice.actionIdDisabled',
+            placeholder: message,
+            disabled: true,
+            options: [{ label: message, value: 'x' }]
+          }
+        ]
+      }
+    ]
+  }
+}
+
 export type ActionDashboardOptions = {
   guildInfo: GuildInfo
   selected?: string
