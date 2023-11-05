@@ -1,3 +1,11 @@
+# [0.20.0](https://github.com/mcbeet/beet-bot/compare/v0.19.0...v0.20.0) (2023-11-05)
+
+
+### Features
+
+* add isolated environments ([4316af4](https://github.com/mcbeet/beet-bot/commit/4316af46d90d24f57c51b2df69edcddcaffb1194))
+* sendTyping, better action choice ux, and fix context menu actions ([f18033b](https://github.com/mcbeet/beet-bot/commit/f18033b6d0d4bdfca014a245ee2b5f1c00ed5da2))
+
 # [0.19.0](https://github.com/mcbeet/beet-bot/compare/v0.18.0...v0.19.0) (2023-10-31)
 
 
