@@ -1,3 +1,10 @@
+# [0.22.0](https://github.com/mcbeet/beet-bot/compare/v0.21.0...v0.22.0) (2023-11-21)
+
+
+### Features
+
+* change timeout retry to timeout fallback ([fa87735](https://github.com/mcbeet/beet-bot/commit/fa87735ba839564a90c0c4a4104420edfcf7432d))
+
 # [0.21.0](https://github.com/mcbeet/beet-bot/compare/v0.20.0...v0.21.0) (2023-11-21)
 
 
