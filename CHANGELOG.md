@@ -1,3 +1,11 @@
+# [0.21.0](https://github.com/mcbeet/beet-bot/compare/v0.20.0...v0.21.0) (2023-11-21)
+
+
+### Features
+
+* share docker builds between environments ([7ff1097](https://github.com/mcbeet/beet-bot/commit/7ff1097570f73428e410c175e8593253927fa191))
+* timeout retry ([f8f632e](https://github.com/mcbeet/beet-bot/commit/f8f632e3e2dc92ee0a9717477ffde5ef35a0d7c5))
+
 # [0.20.0](https://github.com/mcbeet/beet-bot/compare/v0.19.0...v0.20.0) (2023-11-05)
 
 
