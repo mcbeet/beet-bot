@@ -7,11 +7,12 @@
     "default": {
       "warmup": 3,
       "timeout": 4000,
+      "timeoutRetry": "defaultRetry",
       "isolated": false,
       "path": "docker/runner-default",
       "overrides": ["meta.json_reporter.binary_files = true"]
     },
-    "isolated": {
+    "defaultRetry": {
       "warmup": 2,
       "timeout": 30000,
       "isolated": true,

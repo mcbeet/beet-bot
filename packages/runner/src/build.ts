@@ -7,7 +7,8 @@ export type Builder = {
 
 export type WorkerInfo = {
   handle: ChildProcess
-  stop(): Promise<void>
+  stop: () => Promise<void>
+  timeoutRetry?: (options: any) => Promise<any>
 }
 
 export type BuilderOptions = {
@@ -22,12 +23,12 @@ export const createBuilder = ({ warmup, timeout, setup }: BuilderOptions): Build
 
   const createWorker = async () => {
     const spawn = await sentinel
-    const { handle, stop } = await spawn(count++)
+    const { handle, stop, timeoutRetry } = await spawn(count++)
 
     return new Promise<WorkerInfo>((resolve, reject) => {
       handle.on('spawn', () => {
         console.log(`INFO: Successfully spawned idle worker #${handle.pid}`)
-        resolve({ handle, stop })
+        resolve({ handle, stop, timeoutRetry })
       })
 
       handle.on('error', (err) => {
@@ -64,7 +65,7 @@ export const createBuilder = ({ warmup, timeout, setup }: BuilderOptions): Build
     const worker = idle.shift() ?? createWorker()
     idle.push(createWorker())
 
-    const { handle, stop } = await worker
+    const { handle, stop, timeoutRetry } = await worker
 
     return new Promise<any>((resolve, reject) => {
       if (!handle.stdout || !handle.stdin) {
@@ -116,8 +117,13 @@ export const createBuilder = ({ warmup, timeout, setup }: BuilderOptions): Build
         }
 
         if (expired) {
-          const stop = process.hrtime(start)
-          reject(new Error(`Build #${handle.pid} timed out after ${Math.round((stop[0] * 1e9 + stop[1]) / 1e6) / 1000}s`))
+          if (timeoutRetry) {
+            console.log(`INFO: Retrying build #${handle.pid} after timeout`)
+            timeoutRetry(options).then(resolve).catch(reject)
+          } else {
+            const stop = process.hrtime(start)
+            reject(new Error(`Build #${handle.pid} timed out after ${Math.round((stop[0] * 1e9 + stop[1]) / 1e6) / 1000}s`))
+          }
         } else {
           clearTimeout(tid)
           if (signal) {

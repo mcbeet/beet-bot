@@ -9,6 +9,7 @@ export type PoolRunner = {
 export type EnvironmentOptions = {
   warmup: number
   timeout: number
+  timeoutRetry?: string
   isolated: boolean
   path: string
   overrides?: string[]
@@ -18,7 +19,8 @@ export const createPoolRunner = (environments: Record<string, EnvironmentOptions
   const builders = new Map<string, Builder>()
 
   for (const name in environments) {
-    const { warmup, timeout, isolated, path, overrides } = environments[name]
+    const { warmup, timeout, timeoutRetry, isolated, path, overrides } = environments[name]
+
     builders.set(name, createBuilder({
       warmup,
       timeout,
@@ -26,7 +28,23 @@ export const createPoolRunner = (environments: Record<string, EnvironmentOptions
         if (refresh) {
           await deleteDockerBuilder(path)
         }
-        return await setupDockerBuilder(name, path, isolated, overrides)
+
+        const builder = await setupDockerBuilder(name, path, isolated, overrides)
+        if (!timeoutRetry) {
+          return builder
+        }
+
+        return async (id: number) => {
+          const { handle, stop } = await builder(id)
+
+          return {
+            handle,
+            stop,
+            timeoutRetry: async (options: any) => {
+              return await build(timeoutRetry, options)
+            }
+          }
+        }
       }
     }))
   }
