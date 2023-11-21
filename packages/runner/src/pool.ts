@@ -24,7 +24,7 @@ export const createPoolRunner = (environments: Record<string, EnvironmentOptions
       timeout,
       setup: async (refresh: boolean) => {
         if (refresh) {
-          await deleteDockerBuilder(name)
+          await deleteDockerBuilder(path)
         }
         return await setupDockerBuilder(name, path, isolated, overrides)
       }
@@ -32,10 +32,14 @@ export const createPoolRunner = (environments: Record<string, EnvironmentOptions
   }
 
   const refresh = async (name: string) => {
-    const builder = builders.get(name)
+    const environment = environments[name]
 
-    if (builder) {
-      return await builder.refresh()
+    if (environment) {
+      await Promise.all(
+        Object.entries(environments)
+          .filter(([, { path }]) => path === environment.path)
+          .map(([name]) => builders.get(name)?.refresh())
+      )
     } else {
       throw new Error(`Invalid environment "${name}"`)
     }
