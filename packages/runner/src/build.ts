@@ -8,7 +8,7 @@ export type Builder = {
 export type WorkerInfo = {
   handle: ChildProcess
   stop: () => Promise<void>
-  timeoutRetry?: (options: any) => Promise<any>
+  timeoutFallback?: (options: any) => Promise<any>
 }
 
 export type BuilderOptions = {
@@ -23,12 +23,12 @@ export const createBuilder = ({ warmup, timeout, setup }: BuilderOptions): Build
 
   const createWorker = async () => {
     const spawn = await sentinel
-    const { handle, stop, timeoutRetry } = await spawn(count++)
+    const { handle, stop, timeoutFallback } = await spawn(count++)
 
     return new Promise<WorkerInfo>((resolve, reject) => {
       handle.on('spawn', () => {
         console.log(`INFO: Successfully spawned idle worker #${handle.pid}`)
-        resolve({ handle, stop, timeoutRetry })
+        resolve({ handle, stop, timeoutFallback })
       })
 
       handle.on('error', (err) => {
@@ -65,7 +65,12 @@ export const createBuilder = ({ warmup, timeout, setup }: BuilderOptions): Build
     const worker = idle.shift() ?? createWorker()
     idle.push(createWorker())
 
-    const { handle, stop, timeoutRetry } = await worker
+    const { handle, stop, timeoutFallback } = await worker
+
+    let fallback: Promise<any> | undefined
+    if (timeoutFallback) {
+      fallback = timeoutFallback(options)
+    }
 
     return new Promise<any>((resolve, reject) => {
       if (!handle.stdout || !handle.stdin) {
@@ -117,9 +122,17 @@ export const createBuilder = ({ warmup, timeout, setup }: BuilderOptions): Build
         }
 
         if (expired) {
-          if (timeoutRetry) {
-            console.log(`INFO: Retrying build #${handle.pid} after timeout`)
-            timeoutRetry(options).then(resolve).catch(reject)
+          if (fallback) {
+            console.log(`INFO: Using fallback after build #${handle.pid} timed out`)
+            fallback
+              .then((result) => {
+                fallback = undefined
+                resolve(result)
+              })
+              .catch((err) => {
+                fallback = undefined
+                reject(err)
+              })
           } else {
             const stop = process.hrtime(start)
             reject(new Error(`Build #${handle.pid} timed out after ${Math.round((stop[0] * 1e9 + stop[1]) / 1e6) / 1000}s`))
@@ -139,6 +152,12 @@ export const createBuilder = ({ warmup, timeout, setup }: BuilderOptions): Build
           }
         }
       })
+    }).finally(() => {
+      if (fallback) {
+        fallback
+          .then(() => console.log('INFO: Discarding fallback success'))
+          .catch(() => console.log('INFO: Discarding fallback error'))
+      }
     })
   }
 
