@@ -14,7 +14,6 @@ bolt = "*"
 bolt-expressions = "*"
 minecraft-text-components = "*"
 wicked-expressions = "*"
-beet-plugins = { git = "https://github.com/TheWii/beet-plugins.git" }
 
 [tool.poetry.dev-dependencies]
 
