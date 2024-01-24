@@ -5,8 +5,9 @@ description = "Default runner environment for the beet bot."
 authors = ["Valentin Berlier <berlier.v@gmail.com>"]
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = "^3.11"
 Pillow = "*"
+rich = "*"
 beet = "*"
 lectern = "*"
 mecha = "*"
