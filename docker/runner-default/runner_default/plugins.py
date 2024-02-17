@@ -6,7 +6,7 @@ def precompile_ast(ctx: Context):
     ctx.require(
         "bolt",
         "bolt_expressions",
-        "wicked_expressions",
+        # "wicked_expressions",
         "mecha",
     )
 
