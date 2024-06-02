@@ -6,7 +6,7 @@ packages:
 
 runcmd:
   - |
-    amazon-linux-extras install -y docker
+    yum install docker -y
     usermod -a -G docker ec2-user
     systemctl enable docker
     systemctl start docker
