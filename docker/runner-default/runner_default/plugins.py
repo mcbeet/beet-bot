@@ -5,8 +5,8 @@ from beet.contrib.vanilla import Vanilla
 def precompile_ast(ctx: Context):
     ctx.require(
         "bolt",
-        "bolt_expressions",
-        "wicked_expressions",
+        # "bolt_expressions",
+        # "wicked_expressions",
         "mecha",
     )
 
