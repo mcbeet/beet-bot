@@ -92,8 +92,8 @@ const cloudConfig = pulumi.all({
 
 // Create instance for running the bot
 const instance = new aws.ec2.Instance('beet-bot', {
-  instanceType: 't2.micro', // Available in the AWS free tier
-  ami: 'ami-0022f774911c1d690', // Latest amazon linux AMI
+  instanceType: 't3.micro', //  free tier
+  ami: 'ami-00beae93a2d981137', // Amazon Linux 2023 AMI
   vpcSecurityGroupIds: [group.id],
   iamInstanceProfile: new aws.iam.InstanceProfile('beet-bot-profile', { role: policy.role }),
   userData: cloudConfig,
