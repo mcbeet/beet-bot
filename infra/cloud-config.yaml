@@ -11,7 +11,7 @@ runcmd:
     systemctl enable docker
     systemctl start docker
 
-    curl --silent --location https://rpm.nodesource.com/setup_16.x | bash -
+    curl --silent --location https://rpm.nodesource.com/setup_18.x | bash -
     yum install nodejs -y
 
     systemctl enable beet-bot
