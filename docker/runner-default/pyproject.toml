@@ -1,23 +1,17 @@
-[tool.poetry]
+[project]
 name = "runner-default"
-version = "0.0.0"
-description = "Default runner environment for the beet bot."
-authors = ["Valentin Berlier <berlier.v@gmail.com>"]
+version = "0.1.0"
+description = "Default runner environment for the beet bot"
 
-[tool.poetry.dependencies]
-python = "^3.11"
-Pillow = "*"
-rich = "*"
-beet = "*"
-lectern = "*"
-mecha = "*"
-bolt = "*"
-bolt-expressions = "*"
-minecraft-text-components = "*"
-wicked-expressions = "*"
-
-[tool.poetry.dev-dependencies]
+requires-python = ">=3.14"
+dependencies = [
+    "beet>=0.0.0b1",
+    "lectern>=0.0.0b1",
+    "mecha>=0.0.0b1",
+    "bolt>=0.0.0b1",
+    "rich>=14.2.0",
+]
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["uv_build>=0.9.8,<0.10.0"]
+build-backend = "uv_build"

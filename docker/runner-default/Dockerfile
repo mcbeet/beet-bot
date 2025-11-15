@@ -1,16 +1,17 @@
-FROM python:3.11-slim
+FROM python:3.14-slim
 
-RUN pip install poetry --no-cache-dir
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /bin
 
 RUN useradd --create-home beet-bot
 WORKDIR /home/beet-bot
 USER beet-bot
 
-COPY pyproject.toml poetry.toml ./
-COPY runner_default ./runner_default
-RUN poetry install
+# Do not copy uv.lock to let environment rebuilds upgrade to new versions
+COPY pyproject.toml ./
+COPY src ./src
+RUN uv sync
 
 RUN echo '{"pipeline": ["runner_default.bootstrap_environment"]}' \
-  | poetry run beet -p @beet/preset_stdin.yml
+  | uv run beet -p @beet/preset_stdin.yml
 
-ENTRYPOINT ["poetry", "run"]
+ENTRYPOINT ["uv", "run"]
