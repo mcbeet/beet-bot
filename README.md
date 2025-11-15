@@ -6,9 +6,9 @@
 
 > Packages for the beet bot.
 
-Click the following invite link to add the bot to your own server:
+Click the following link to add the bot to your own server:
 
-- https://discord.com/api/oauth2/authorize?client_id=980644229984419932&permissions=0&scope=bot%20applications.commands
+- https://discord.com/oauth2/authorize?client_id=980644229984419932
 
 ## Installation
 
