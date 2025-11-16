@@ -9,8 +9,6 @@ USER beet-bot
 # Do not copy uv.lock to let environment rebuilds upgrade to new versions
 COPY pyproject.toml ./
 COPY src ./src
-
-ARG REFRESH=0
 RUN uv sync
 
 RUN echo '{"pipeline": ["runner_default.bootstrap_environment"]}' \
