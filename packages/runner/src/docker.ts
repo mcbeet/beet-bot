@@ -37,6 +37,10 @@ const runDockerRmi = async (image: DockerImage) => {
     console.log(`INFO: Deleting image "${image.tag}"`)
     await execa('docker', ['rmi', '--force', image.tag], { stdio: 'inherit' })
     console.log(`INFO: Deleted image "${image.tag}"`)
+    console.log('INFO: Removing unused build cache')
+    await execa('docker', ['builder', 'prune', '--force'], { stdio: 'inherit' })
+    await execa('docker', ['buildx', 'prune', '--force'], { stdio: 'inherit' })
+    console.log('INFO: Removed unused build cache')
     image.status = 'toBuild'
   } catch {
     console.log(`WARN: Error deleting image "${image.tag}"`)
