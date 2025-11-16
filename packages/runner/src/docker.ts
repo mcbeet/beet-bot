@@ -23,7 +23,7 @@ const getDockerImage = (path: string) => {
 const runDockerBuild = async (image: DockerImage, path: string) => {
   try {
     console.log(`INFO: Start building image "${image.tag}"`)
-    await execa('docker', ['build', path, '--tag', image.tag], { stdio: 'inherit' })
+    await execa('docker', ['build', path, '--build-arg', `REFRESH=${Date.now()}`, '--tag', image.tag], { stdio: 'inherit' })
     console.log(`INFO: Done building image "${image.tag}"`)
     image.status = 'ready'
   } catch {
