@@ -1,3 +1,15 @@
+# [0.23.0](https://github.com/mcbeet/beet-bot/compare/v0.22.1...v0.23.0) (2025-11-16)
+
+
+### Bug Fixes
+
+* revert refresh ([3eb57f3](https://github.com/mcbeet/beet-bot/commit/3eb57f3b747d15c885209e8b4d8fa1ea2675f499))
+
+
+### Features
+
+* auto-clear unused build cache ([c678eef](https://github.com/mcbeet/beet-bot/commit/c678eef6373da246102ef1e67dba578b1a70d83a))
+
 ## [0.22.1](https://github.com/mcbeet/beet-bot/compare/v0.22.0...v0.22.1) (2025-11-16)
 
 
