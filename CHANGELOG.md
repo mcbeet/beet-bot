@@ -1,3 +1,10 @@
+## [0.22.1](https://github.com/mcbeet/beet-bot/compare/v0.22.0...v0.22.1) (2025-11-16)
+
+
+### Bug Fixes
+
+* refresh ([d9ee03d](https://github.com/mcbeet/beet-bot/commit/d9ee03d9c8216fd0afad94ed3ade4a18b333e93a))
+
 # [0.22.0](https://github.com/mcbeet/beet-bot/compare/v0.21.0...v0.22.0) (2023-11-21)
 
 
